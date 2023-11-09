@@ -1,7 +1,21 @@
 Decisions made:
+should start working on code and creating the features
+Features we want to include:
+- use Spotify's API to link to Spotify
+- have a database of songs (using Genius API) so that users can filter through songs and their attributes
+- use Ticketmaster API to recommend nearby events (around 10) based on recent artists
+- profile page with info about user (top artists and genres) and most recent searches
+- will store user info, including username and hashed password, recent searches, and if connected to Spotify, favorite artists and/or genres
 
 Alternative actions/options discussed:
 
 Roles and Responsibilities:
+Emanuele: will continue brainstorming the app and has created use case stories
+Tyler: will work on the pages and the database mostly
+Olivia: Document from the lab, will work on the profile page and setting up the pages
+Ali: Will work on use case scenarios and setting up the web pages
+Isabelle: will set up partials for the pages
 
 Follow-up items:
+- need to add calendar events for the following TA meetings
+- need to add descriptions to the user stories, as well as assignees for each one
