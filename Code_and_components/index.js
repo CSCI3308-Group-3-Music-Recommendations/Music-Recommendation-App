@@ -1,6 +1,7 @@
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
+const session = require("express-session");
 
 
 // database configuration
@@ -23,6 +24,26 @@ db.connect()
   .catch(error => {
     console.log('ERROR:', error.message || error);
   });
+
+// set the view engine to ejs
+app.set("view engine", "ejs");
+app.use(bodyParser.json());
+
+// set session
+app.use(
+  session({
+    secret: "XASDASDA",
+    saveUninitialized: true,
+    resave: true,
+  })
+);
+
+const user = {
+  user_id: undefined,
+  username: undefined,
+  first_name: undefined,
+  last_name: undefined,
+};
 
 
 app.get('/welcome', (req, res) => {
@@ -87,4 +108,32 @@ app.post('/register', (req, res) => {
       });
 })
 
+
+app.get('/discover', async (req, res) => {
+  const ticketmaster_api_key = "kUFeqGhN5NHBhB8Fafpu2jpS2gWPURt9"
+  const query = `SELECT short_term_top_artists, medium_term_top_artists, long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
+
+  try{
+    const response = await axios({
+        url: `https://app.ticketmaster.com/discovery/v2/events.json`,
+        method: 'GET',
+        dataType: 'json',
+        headers: {
+          'Accept-Encoding': 'application/json',
+        },
+        params: {
+          apikey: ticketmaster_api_key,
+          keyword: "", //you can choose any artist/event here
+          size: 20 // you can choose the number of events you would like to return
+        },
+      })
+      const events = response.data._embedded.events;
+      res.render('pages/discover', {events: events})
+    }
+    catch(error){
+      console.error(err);
+      res.render('pages/discover', {events: {} , error: 'failed'})
+    }
+  
+});
 module.exports = app.listen(3000);
