@@ -24,3 +24,10 @@ CREATE TABLE top_records(
     medium_term_top_records VARCHAR(200) ARRAY[10],
     long_term_top_records VARCHAR(200) ARRAY[10],
 );
+
+CREATE TABLE top_genres(
+    user_id INTEGER,
+    short_term_top_genres VARCHAR(200) ARRAY[10],
+    medium_term_top_genres VARCHAR(200) ARRAY[10],
+    long_term_top_genres VARCHAR(200) ARRAY[10],
+);
