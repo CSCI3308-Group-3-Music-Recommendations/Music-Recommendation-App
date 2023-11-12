@@ -19,6 +19,7 @@ CREATE TABLE top_tracks(
 );
 
 CREATE TABLE top_records(
+    user_id INTEGER,
     short_term_top_records VARCHAR(200) ARRAY[10],
     medium_term_top_records VARCHAR(200) ARRAY[10],
     long_term_top_records VARCHAR(200) ARRAY[10],
