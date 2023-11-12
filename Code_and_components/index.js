@@ -1,8 +1,7 @@
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
-const session = require("express-session");
-
+const bodyParser = require("body-parser");
 
 // database configuration
 const dbConfig = {
@@ -29,21 +28,6 @@ db.connect()
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 
-// set session
-app.use(
-  session({
-    secret: "XASDASDA",
-    saveUninitialized: true,
-    resave: true,
-  })
-);
-
-const user = {
-  user_id: undefined,
-  username: undefined,
-  first_name: undefined,
-  last_name: undefined,
-};
 
 
 app.get('/welcome', (req, res) => {
