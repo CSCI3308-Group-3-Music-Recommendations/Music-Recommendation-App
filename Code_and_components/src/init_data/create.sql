@@ -1,7 +1,9 @@
 CREATE TABLE users(
     user_id INTEGER PRIMARY KEY,
-    username VARCHAR(40),
+    username VARCHAR(40) NOT NULL,
     password CHAR(60) NOT NULL,
+    first_name VARCHAR(60),
+    last_name VARCHAR(60),
 );
 
 CREATE TABLE top_artists(
