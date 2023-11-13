@@ -1,0 +1,10 @@
+insert into users (username, password) values ('hhawksley0', 'Eskilstuna');
+insert into users (username, password) values ('ojarnell1', 'Baitashan');
+insert into users (username, password) values ('dhackwell2', 'Tikiw');
+insert into users (username, password) values ('ckelland3', 'Singajaya');
+insert into users (username, password) values ('efontaine4', 'Magugu');
+insert into users (username, password) values ('rgant5', 'Xinshao');
+insert into users (username, password) values ('fbeckhouse6', 'Zheleznodorozhnyy');
+insert into users (username, password) values ('mfalconer7', 'La Plaine-Saint-Denis');
+insert into users (username, password) values ('pgaiger8', 'Cerro Azul');
+insert into users (username, password) values ('randreassen9', 'Lunel');

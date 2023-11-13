@@ -1,7 +1,10 @@
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
-
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+const axios = require('axios');
 
 // database configuration
 const dbConfig = {
@@ -24,7 +27,26 @@ db.connect()
     console.log('ERROR:', error.message || error);
   });
 
+app.set('view engine', 'ejs'); // set the view engine to EJS
+app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 
+// initialize session variables
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false,
+  })
+);
+
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+//--------------------------------------------------------------------------------------------------------------------------------
+// ENDPOINTS
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
@@ -64,14 +86,19 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post('/register', (req, res) => {
+app.get('/register', (req, res) => {
+  res.render('pages/register');
+});
+
+app.post('/register', async (req, res) => {
   // hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
 
   //To-Do: Insert username and hashed password into 'users' table
   const add_user = `insert into users (username, password) values ($1, $2) returning * ;`; 
 
   db.task('add-user', task => {
-    return task.batch([task.any(add_user, [req.body.username])]);
+    return task.batch([task.any(add_user, [req.body.username, hash])]);
   })
   // if query execution succeeds, redirect to GET /login page
   // if query execution fails, redirect to GET /register route
@@ -87,4 +114,24 @@ app.post('/register', (req, res) => {
       });
 })
 
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render("pages/login");
+  res.render("pages/login", {
+    message: `Logged out successfully.`,
+  });
+})
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+app.use(auth)
+
 module.exports = app.listen(3000);
+console.log('Server is listening on port 3000');
