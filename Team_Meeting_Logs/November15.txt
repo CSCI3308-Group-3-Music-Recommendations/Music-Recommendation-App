@@ -17,3 +17,8 @@ For later:
 - search/filter functionality
 - discover page 
 - making things look good
+
+
+Work done this week:
+Emanuele: added the spotify API routes to get authoirzation code, get access and refresh token, and get top 10 tracks. Need to test them once site is ready.
+Ali: Created and styled profile page, styled header and footer to be consistent with each other and profile page.
