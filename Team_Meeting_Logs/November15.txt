@@ -1,1 +1,19 @@
 Document for November 15th TA meeting
+
+
+
+Goals before TA meeting:
+- website shows up (maybe?)
+- tests work
+- release notes (what we have worked on since last TA meeting)
+
+Goals for next week:
+- login page, register page, home page all up and fully functional
+- profile page - all set up with basic info from registration + good work on top artists/tracks/etc.
+- sync with spotify account done
+
+
+For later:
+- search/filter functionality
+- discover page 
+- making things look good
