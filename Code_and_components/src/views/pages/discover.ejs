@@ -1,0 +1,30 @@
+<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+
+<main>
+    <div class="container">
+      <h2>Discover Events Based on Your Listening</h2>
+      <div class="row">
+          <%
+            for (let event of events){ %>
+              <div class="col mb-4 mb-4">
+                <div class="card">
+                  <img src="<%=event.images[0].url%>" class="card-img-top" alt="Event Image">
+                  <div class="card-body">
+                    <h4 class="card-title"><%=event.name%></h4>
+                    <p class="card-text">
+                        Date: <%=event.dates.start.localDate%>
+                        <br>
+                        Time: <%=event.dates.start.localTime%>
+                    </p>
+                    <a href="<%=event.url %>" class="btn btn-primary"> Book Now</a>
+                  </div>
+                </div>
+              </div>
+           <% }
+          %>
+      </div>
+    </div>
+</main>
+  
+
+<%- include ('../partials/footer') %>
