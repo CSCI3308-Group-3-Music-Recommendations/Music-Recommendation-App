@@ -1,0 +1,99 @@
+Feature 1:
+Being able to view your top artists in different intervals of time no matter your listening history
+User case 1: User has 0 listening history with no top artists to fetch
+Data: The array of top artists will be empty
+The site tells the user they have no listening history as of now and encourages them to listen to some songs.
+User case 2: User has less than 10 top artists but more than 0
+Data: The array of top artists will not be empty but will have less than 10 artists.
+The site displays only the number of top artists that the user has listened to, will have less than 10 entries and the site will adjust accordingly.
+User case 3: User has more than 10 top artists
+Data: the array of top artists will be full with their top 10 artists.
+The site displays just their top 10 artists.
+User will click on short/medium/long term tab (which will call the api route for spotify and get the corresponding listening history) and the site will direct them to the matching route:
+Short Term:
+User clicks on short term tab, and the site displays the short term listening history (and works for all 3 user cases)
+Medium Term:
+User clicks on medium term tab, and the site displays the medium term listening history (and works for all 3 user cases)
+Long Term:
+User clicks on long term tab, and the site displays the long term listening history (and works for all 3 user cases)
+The test environment will be the website after you have logged in and synced your spotify.
+The user acceptance tester will be Emanuele Rimini.
+
+
+Feature 2:
+A user should be able to see concerts nearby based off their top artists
+Specific Test Cases
+User case 1: User has 0 listening history with no top artists/songs to fetch
+User would be able to click on the nearby concerts page and try to see concerts nearby for artist after being routed to the page. 
+Data: This would be based off the user’s listening history calls from the Spotify API that are stored in their respective 
+User case 2: User has listening history
+User would be able to click on the nearby concerts page and try to see concerts nearby for artists after being routed to the concerts page
+Data: This would be based off the user’s listening history calls from the Spotify API that are stored in their respective 
+Test Data
+User case 1: User with no listening history
+Data 1:
+A user not connected with a spotify account
+Data 2:
+A user with a spotify account with no listening time
+User case 2: User has listening history 
+Data 1:
+Any user that has played enough songs on spotify from a single artist to trigger the API to make said artist a top artist
+Test Plan
+Test Environment
+Music Recommendation Website Concert Recommendation Page
+Test results
+User Case 1:
+Message pops up that says “No listening history found” or says “No account logged in” and simply recommends soonest concerts
+User would be recommended any concert nearby rather than specific artist-based concerts
+User Case 2:
+
+
+User will be displayed nearby concerts for all their top 10 artists, if they have less than 10 top artists but more than 0, display the n amount of artists that they have in their top artists
+User acceptance testers
+User with Spotify Account
+User without Spotify Account
+User without connected Spotify account
+
+Feature 3:
+A user should be able to login if they have an account or register if they don’t
+Specific Test Cases + Results
+User case 1: User has an existing account and inputs username and matching password (login)
+User would be redirected to the home page and their profile page would be updated with their information
+User case 2: User has an existing account and inputs a username and password that don’t match (login)
+User would remain on the login page and an error message would pop up saying something like “username doesn’t exist or password doesn’t match”, must enter correct username and password to follow User Case 1, otherwise error message continues to pop up
+User case 3: User doesn’t have an existing account and inputs an unused username (register)
+User clicks on “Register” link on the page, is redirected to the Register page, inputs new username/password, is redirected to the login page, their username and password is added to the database, and profile page is updated with their information
+User case 4: User doesn’t have an existing account and inputs a used username (register)
+User clicks on “Register” link on the page, is redirected to the Register page, inputs new username/password, error message saying “username already exists” pops up, user must enter unused username and a password. Once user enters an unused username then they follow User Case 3, otherwise error message continues to pop up.
+Test Data
+What page they are redirected to (all cases, Home or Login page)
+If Profile Page is updated with correct information (case 1 and 3)
+If Error Message pops up (case 2 and 4)
+If database is updated with new username and password (case 3)
+If only username or only password is input and user clicks submit an error message pops up and they must re-input their information (all cases)
+Test Environment
+Music Recommendation Website, Login and Register pages
+User Acceptance Testers
+4 different users, each that match the above requirements (one person can do this)
+
+
+Feature 4:
+User should be able to receive song/artist/album recommendations based upon their history.
+Specific Test cases
+User case 1: User has not linked their spotify account
+User is prompted to enter a song/artist/album they enjoy and will receive recommendations based on their entry. Search bar will display options that are possible to select, meaning the user cannot enter options that do not exist.
+User case 2: User has linked their spotify account, but it has no data
+Same response as user case 1.
+User case 3: User has linked their spotify account, and it has data
+User can see their recommendations based upon their linked account, and also has the same option as in user cases 1 and 2 to enter an input of their choice.
+Test Data
+If an error message is displayed
+If relevant results show up
+If user can select from a list based on what they typed (cannot enter incorrect input)
+If user is prompted to link spotify account / not depending on if they already have
+Test Environment
+Recommendations page (song, album, artists)
+User Acceptance Testers
+User case 1: user who has not linked spotify account
+User case 2: user who has empty spotify account
+User case 3: user who has linked spotify account
