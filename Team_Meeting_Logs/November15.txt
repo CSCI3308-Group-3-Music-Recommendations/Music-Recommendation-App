@@ -1,1 +1,4 @@
 Document for November 15th TA meeting
+
+Work done this week:
+Emanuele: added the spotify API routes to get authoirzation code, get access and refresh token, and get top 10 tracks. Need to test them once site is ready.
