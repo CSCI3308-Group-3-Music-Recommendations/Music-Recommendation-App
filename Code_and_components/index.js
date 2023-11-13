@@ -1,6 +1,7 @@
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
+const bodyParser = require("body-parser");
 const session = require("express-session");
 
 
@@ -37,14 +38,6 @@ app.use(
     resave: true,
   })
 );
-
-const user = {
-  user_id: undefined,
-  username: undefined,
-  first_name: undefined,
-  last_name: undefined,
-};
-
 
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
@@ -108,10 +101,22 @@ app.post('/register', (req, res) => {
       });
 })
 
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
 
 app.get('/discover', async (req, res) => {
   const ticketmaster_api_key = "kUFeqGhN5NHBhB8Fafpu2jpS2gWPURt9"
   const query = `SELECT short_term_top_artists, medium_term_top_artists, long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
+  const artists = await db.any(query);
 
   try{
     const response = await axios({
@@ -123,7 +128,7 @@ app.get('/discover', async (req, res) => {
         },
         params: {
           apikey: ticketmaster_api_key,
-          keyword: "", //you can choose any artist/event here
+          keyword: artists, //you can choose any artist/event here
           size: 20 // you can choose the number of events you would like to return
         },
       })
