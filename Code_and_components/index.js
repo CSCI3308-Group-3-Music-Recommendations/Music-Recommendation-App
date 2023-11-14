@@ -1,30 +1,29 @@
-const express = require('express'); // To build an application server or API
+const express = require("express");
 const app = express();
-const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const bcrypt = require('bcrypt');
-const axios = require('axios');
+const pgp = require("pg-promise")();
+const bodyParser = require("body-parser");
+const session = require("express-session");
 
-// database configuration
+// db config
 const dbConfig = {
-  host: 'db', // the database server
-  port: 5432, // the database port
-  database: process.env.POSTGRES_DB, // the database name
-  user: process.env.POSTGRES_USER, // the user account to connect with
-  password: process.env.POSTGRES_PASSWORD, // the password of the user account
+  host: "db",
+  port: 5432,
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
 };
 
 const db = pgp(dbConfig);
 
-// test your database
+// db test
 db.connect()
-  .then(obj => {
-    console.log('Database connection successful'); // you can view this message in the docker compose logs
+  .then((obj) => {
+    // Can check the server version here (pg-promise v10.1.0+):
+    console.log("Database connection successful");
     obj.done(); // success, release the connection;
   })
-  .catch(error => {
-    console.log('ERROR:', error.message || error);
+  .catch((error) => {
+    console.log("ERROR:", error.message || error);
   });
 
 // set the view engine to ejs
@@ -39,6 +38,14 @@ app.use(
     resave: true,
   })
 );
+
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+//---------------------------------------------------------------------------------------------------------------------
 
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
@@ -79,19 +86,14 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get('/register', (req, res) => {
-  res.render('pages/register');
-});
-
-app.post('/register', async (req, res) => {
+app.post('/register', (req, res) => {
   // hash the password using bcrypt library
-  const hash = await bcrypt.hash(req.body.password, 10);
 
   //To-Do: Insert username and hashed password into 'users' table
   const add_user = `insert into users (username, password) values ($1, $2) returning * ;`; 
 
   db.task('add-user', task => {
-    return task.batch([task.any(add_user, [req.body.username, hash])]);
+    return task.batch([task.any(add_user, [req.body.username])]);
   })
   // if query execution succeeds, redirect to GET /login page
   // if query execution fails, redirect to GET /register route
@@ -257,4 +259,3 @@ app.get('/discover', async (req, res) => {
 });
 
 module.exports = app.listen(3000);
-console.log('Server is listening on port 3000');
