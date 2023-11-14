@@ -243,4 +243,14 @@ app.get('/discover', async (req, res) => {
     }
   
 });
+
+
+//recommend api
+app.get('/recommend', async (req, res) => {
+  const last_FM_API_Key = "15a33f9792af312e782f20c0115a417b"
+  const last_FM_Shared_Secret = "17b8fb6f4262b7572b59862d0e1d85c3"
+  
+});
+
+
 module.exports = app.listen(3000);
