@@ -126,25 +126,6 @@ const auth = (req, res, next) => {
 
 app.use(auth)
 
-app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.render("pages/login");
-  res.render("pages/login", {
-    message: `Logged out successfully.`,
-  });
-})
-
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
-
-app.use(auth)
-
 var client_id = 'a8a051d3f78f420295c99fdc4d712ede';
 var client_secret = 'e950fb4f69654075b05305d7aa871043'
 var redirect_uri = 'http://localhost:3000/callback';
@@ -245,19 +226,6 @@ app.get('/refresh_token', async function(req, res) {
     )
   );
 })
-
-
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
-
-// Authentication Required
-app.use(auth);
 
 app.get('/discover', async (req, res) => {
   const ticketmaster_api_key = "kUFeqGhN5NHBhB8Fafpu2jpS2gWPURt9"
