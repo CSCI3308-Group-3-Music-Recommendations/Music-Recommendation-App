@@ -60,7 +60,7 @@ app.get('/login', (req, res) => {
   res.render('pages/login');
 });
 
-app.post("/login", async (req, res) => {
+app.post('/login', async (req, res) => {
   try {
 
     const username = req.body.username;
@@ -76,7 +76,10 @@ app.post("/login", async (req, res) => {
     if (match) {
       req.session.user = user;
       req.session.save(() => {
-        res.redirect('/discover');
+        res.redirect('/home');
+        res.status(200).json({
+          status: 'Success',
+        });
       });
     } else {
       throw new Error("Incorrect username or password.");
