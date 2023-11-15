@@ -216,7 +216,6 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 app.get('/discover', async (req, res) => {
-  const ticketmaster_api_key = "kUFeqGhN5NHBhB8Fafpu2jpS2gWPURt9"
   const query = `SELECT short_term_top_artists, medium_term_top_artists, long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
   const artists = await db.any(query);
 
@@ -247,8 +246,7 @@ app.get('/discover', async (req, res) => {
 
 //recommend api
 app.get('/recommend', async (req, res) => {
-  const last_FM_API_Key = "15a33f9792af312e782f20c0115a417b"
-  const last_FM_Shared_Secret = "17b8fb6f4262b7572b59862d0e1d85c3"
+  
   
 });
 
