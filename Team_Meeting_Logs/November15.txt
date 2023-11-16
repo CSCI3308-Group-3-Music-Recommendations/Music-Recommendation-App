@@ -1,6 +1,6 @@
 Document for November 15th TA meeting
 
-
+BEFORE MEETING NOTES:
 
 Goals before TA meeting:
 - website shows up (maybe?)
@@ -23,3 +23,53 @@ Work done this week:
 Emanuele: added the spotify API routes to get authoirzation code, get access and refresh token, and get top 10 tracks. Need to test them once site is ready.
 Ali: Created and styled profile page, styled header and footer to be consistent with each other and profile page.
 Olivia: added login and registration page, updated descriptions for user stories, added to databases
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+MINUTES FROM MEETINGS:
+
+Things we have done (overall):
+- set up database
+- login and registration page
+- made some api routes (loging into spotify, discover (tickemaster), search api, reccomendation)
+
+
+Questions:
+    How are we populating databases?
+    - through apis
+
+    Have we set up tables and schemas?
+    - yes
+    - might have to add a couple more but mostly set up
+
+
+    What are we stuck on?
+    - reccomendation api (call to spotify), you type in something and it will search by relevant text, in index.js but he wants to populate and click on a specific one. So reccomend based on a specific song. Can you call an api from a button? (office hours or during lab)
+
+
+Tyler:
+- worked on: made nav bar, worked on some pages and apis (discover and search)
+- next week: finish up reccomendation api
+
+Isabelle:
+- worked on: testing, for login and register and maybe one more
+- next week: focus on making home page look good, and make profile page (choose image for profile, etc.)
+
+
+Olivia:
+- worked on: registration page, login page, user stories, databases
+- next week: finish up user stories (forgot about acceptance criteria), continue working on login/registration, testing
+
+
+Ali:
+- worked on: header/nav bar, footer, and profile page
+- next week: work on ui for pages, make pages in nav bar link to actual pages, work on having photos/icons show up
+
+Emanuele:
+- work on: spotify api (refres token, access token, etc.) so users can sync account with spotify
+- next week: test routes, route to get top 10 tracks
+
+
+
+Things we need to work on:
+- updating user stories throughout the week/before TA meeting

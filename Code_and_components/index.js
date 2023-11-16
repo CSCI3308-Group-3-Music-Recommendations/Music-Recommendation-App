@@ -113,8 +113,8 @@ app.post('/register', async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, 10);
 
   //To-Do: Insert username and hashed password into 'users' table
-  const add_user = `insert into users (username, password) values ($1, $2) returning * ;`; 
-
+  const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`; 
+ 
   db.task('add-user', task => {
     return task.batch([task.any(add_user, [req.body.username, hash])]);
   })
