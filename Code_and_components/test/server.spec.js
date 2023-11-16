@@ -78,7 +78,7 @@ it('Negative : /register', done => {
   chai
     .request(server)
     .post('/register')
-    .send({username: 'username', password: '', first_name: 'John', last_name: 'Doe'})
+    .send({username: 'usernameusernameusernameusernameusernameusernameusernameusername', password: 'password', first_name: 'John', last_name: 'Doe'})
     .end((err, res) => {
       //fix status number
       expect(res).to.have.status(200);
