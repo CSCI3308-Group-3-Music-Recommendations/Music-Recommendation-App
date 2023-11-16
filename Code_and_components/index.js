@@ -98,7 +98,6 @@ app.post('/login', async (req, res) => {
       res.json({status: 'Success', message: 'Log in successful.'});
       req.session.user = user;
       req.session.save(() => {
-        
         res.redirect('/home');
       });
     } else {
@@ -106,12 +105,15 @@ app.post('/login', async (req, res) => {
     }
   } catch (error) {
     res.json({status: 'Failure', message: 'Incorrect username or password.'});
-    res.render('pages/login');
+    res.render('pages/login'); // cannot set headers after they are sent to the client
     return console.log(error);
   }
 });
 
+// app.get register functionality??
+
 app.post('/register', async (req, res) => {
+
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
