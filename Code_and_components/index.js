@@ -3,6 +3,8 @@ const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const axios = require('axios');
+const bcrypt = require('bcrypt');
 
 
 // database configuration
@@ -228,7 +230,7 @@ app.get('/discover', async (req, res) => {
           'Accept-Encoding': 'application/json',
         },
         params: {
-          apikey: ticketmaster_api_key,
+          apikey: TICKETMASTER_API_KEY,
           keyword: artists, //you can choose any artist/event here
           size: 20 // you can choose the number of events you would like to return
         },
@@ -245,9 +247,25 @@ app.get('/discover', async (req, res) => {
 
 
 //recommend api
-app.get('/recommend', async (req, res) => {
-  
-  
+app.get('/searchSong', async (req, res) => {
+  const input_song = req.body.InputSong
+  try{
+    const response = await axios({
+        url: 'http://ws.audioscrobbler.com/2.0',
+        params: {
+          method: 'track.search',
+          api_key: LAST_FM_API_KEY,
+          track: input_song,
+          format: 'json',
+        },
+  })
+    const searchResults = response.data.results.trackmatches.track   
+    res.render('pages/recommendations', {tracks: searchResults})
+  }
+  catch(error){
+    console.error(err);
+    res.render('pages/recommendations', {song: {},error: 'failed'})
+  }
 });
 
 

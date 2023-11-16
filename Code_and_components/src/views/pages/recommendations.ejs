@@ -7,15 +7,25 @@
 */
 <main>
     <div class="container">
-        <form action="/recommend" method="get">
+        <form action="/searchSong" method="get">
             <div class="mb-4">
-                <label class="form-label" for="song-input">Type a song to get similar recommendations</label>
-                <input type="text" name="song-input" class="form-control">
-            </div>
+                <label class="form-label" for="InputSong">Type a song to get similar recommendations</label>
+                <input type="text" name="InputSong" class="form-control">
+            </div>  
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
+        <%
+            tracks.forEach(function(track){ %>
+                <tr>
+                    <td>
+                        
+                    </td>
+                </tr>
+
+            })
+        %>
     </div>
 </main>
 
