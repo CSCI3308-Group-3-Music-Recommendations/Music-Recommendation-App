@@ -1,30 +1,8 @@
-const express = require('express'); // To build an application server or API
+const express = require('express');
 const app = express();
-const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
-const bodyParser = require("body-parser");
-const session = require("express-session");
-
-
-// database configuration
-const dbConfig = {
-  host: 'db', // the database server
-  port: 5432, // the database port
-  database: process.env.POSTGRES_DB, // the database name
-  user: process.env.POSTGRES_USER, // the user account to connect with
-  password: process.env.POSTGRES_PASSWORD, // the password of the user account
-};
-
-const db = pgp(dbConfig);
-
-// test your database
-db.connect()
-  .then(obj => {
-    console.log('Database connection successful'); // you can view this message in the docker compose logs
-    obj.done(); // success, release the connection;
-  })
-  .catch(error => {
-    console.log('ERROR:', error.message || error);
-  });
+const pgp = require('pg-promise')();
+const bodyParser = require('body-parser');
+const session = require('express-session');
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
@@ -39,10 +17,45 @@ app.use(
   })
 );
 
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+// db config
+const dbConfig = {
+  host: 'db',
+  port: 5432,
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+};
+
+const db = pgp(dbConfig);
+
+// db test
+db.connect()
+  .then((obj) => {
+    // Can check the server version here (pg-promise v10.1.0+):
+    console.log("Database connection successful");
+    obj.done(); // success, release the connection;
+  })
+  .catch((error) => {
+    console.log("ERROR:", error.message || error);
+  });
+
+  const user = {
+    username: undefined,
+    first_name: undefined,
+    last_name: undefined,
+  };
+
+//---------------------------------------------------------------------------------------------------------------------
+
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
-
 
 app.get('/', (req, res) => {
   res.redirect('/login'); //this will call /login route in the API
@@ -52,11 +65,11 @@ app.get('/login', (req, res) => {
   res.render('pages/login');
 });
 
-app.post("/login", async (req, res) => {
+app.post('/login', async (req, res) => {
   try {
 
     const username = req.body.username;
-    const user = await db.oneOrNone('select * from users where username =  $1', username);
+    const user = await db.oneOrNone(`select * from users where username =  $1`, username);
 
     if (!user) {
       res.redirect('/register');
@@ -68,24 +81,30 @@ app.post("/login", async (req, res) => {
     if (match) {
       req.session.user = user;
       req.session.save(() => {
-        res.redirect('/discover');
+        res.redirect('/home');
+        res.status(200).json({
+          status: 'Success',
+          message: 'Log in successful.'
+        });
       });
     } else {
       throw new Error("Incorrect username or password.");
     }
   } catch (error) {
     res.render('pages/login', { error: "Incorrect username or password." });
+    return console.log(error);
   }
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
   // hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
 
   //To-Do: Insert username and hashed password into 'users' table
   const add_user = `insert into users (username, password) values ($1, $2) returning * ;`; 
 
   db.task('add-user', task => {
-    return task.batch([task.any(add_user, [req.body.username])]);
+    return task.batch([task.any(add_user, [req.body.username, hash])]);
   })
   // if query execution succeeds, redirect to GET /login page
   // if query execution fails, redirect to GET /register route
@@ -100,6 +119,25 @@ app.post('/register', (req, res) => {
         res.redirect('/register');
       });
 })
+
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render("pages/login");
+  res.render("pages/login", {
+    message: `Logged out successfully.`,
+  });
+})
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+app.use(auth)
 
 var client_id = 'a8a051d3f78f420295c99fdc4d712ede';
 var client_secret = 'e950fb4f69654075b05305d7aa871043'
@@ -202,19 +240,6 @@ app.get('/refresh_token', async function(req, res) {
   );
 })
 
-
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
-
-// Authentication Required
-app.use(auth);
-
 app.get('/discover', async (req, res) => {
   const ticketmaster_api_key = "kUFeqGhN5NHBhB8Fafpu2jpS2gWPURt9"
   const query = `SELECT short_term_top_artists, medium_term_top_artists, long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
@@ -243,4 +268,5 @@ app.get('/discover', async (req, res) => {
     }
   
 });
+
 module.exports = app.listen(3000);
