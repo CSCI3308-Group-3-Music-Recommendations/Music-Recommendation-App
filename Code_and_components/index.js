@@ -65,6 +65,18 @@ app.get('/login', (req, res) => {
   res.render('pages/login');
 });
 
+app.get('/toptracks', (req, res) => {
+  res.render('pages/toptracks');
+});
+
+app.get('/topartists', (req, res) => {
+  res.render('pages/topartists');
+});
+
+app.get('/toprecords', (req, res) => {
+  res.render('pages/toprecords');
+});
+
 app.post('/login', async (req, res) => {
   try {
 
@@ -145,6 +157,8 @@ var redirect_uri = 'http://localhost:3000/callback';
 var spoitfy_linked = false;
 
 app.get('/spotifylogin', function(req, res) {
+
+  console.log("in login")
 
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
@@ -230,15 +244,6 @@ async function getTopTracks(){
   )).items;
 }
 
-app.get('/refresh_token', async function(req, res) {
-  const topTracks = await getTopTracks();
-  console.log(
-    topTracks?.map(
-      ({name, artists}) =>
-        `${name} by ${artists.map(artist => artist.name).join(', ')}`
-    )
-  );
-})
 
 app.get('/discover', async (req, res) => {
   const ticketmaster_api_key = "kUFeqGhN5NHBhB8Fafpu2jpS2gWPURt9"
