@@ -17,14 +17,25 @@
             </div>
         </form>
         <%
+        if (tracks)
+        {
             tracks.forEach(function(track){ %>
                 <tr>
+                    <td id="track-name">
+                        <%=track.name%>
+                    </td>
+                    <td id="track-artist">
+                        <%=track.artist.name%>
+                    </td>
                     <td>
-                        
+                        <img src="<%=track.image%>" alt="track image">
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" onclick="recommendSong()"></button>
                     </td>
                 </tr>
-
-            })
+           <% })
+        }     
         %>
     </div>
 </main>
