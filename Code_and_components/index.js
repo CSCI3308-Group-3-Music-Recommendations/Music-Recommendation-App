@@ -1,30 +1,8 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const pgp = require("pg-promise")();
-const bodyParser = require("body-parser");
-const session = require("express-session");
-
-// db config
-const dbConfig = {
-  host: "db",
-  port: 5432,
-  database: process.env.POSTGRES_DB,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-};
-
-const db = pgp(dbConfig);
-
-// db test
-db.connect()
-  .then((obj) => {
-    // Can check the server version here (pg-promise v10.1.0+):
-    console.log("Database connection successful");
-    obj.done(); // success, release the connection;
-  })
-  .catch((error) => {
-    console.log("ERROR:", error.message || error);
-  });
+const pgp = require('pg-promise')();
+const bodyParser = require('body-parser');
+const session = require('express-session');
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
@@ -45,12 +23,39 @@ app.use(
   })
 );
 
+// db config
+const dbConfig = {
+  host: 'db',
+  port: 5432,
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+};
+
+const db = pgp(dbConfig);
+
+// db test
+db.connect()
+  .then((obj) => {
+    // Can check the server version here (pg-promise v10.1.0+):
+    console.log("Database connection successful");
+    obj.done(); // success, release the connection;
+  })
+  .catch((error) => {
+    console.log("ERROR:", error.message || error);
+  });
+
+  const user = {
+    username: undefined,
+    first_name: undefined,
+    last_name: undefined,
+  };
+
 //---------------------------------------------------------------------------------------------------------------------
 
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
-
 
 app.get('/', (req, res) => {
   res.redirect('/login'); //this will call /login route in the API
@@ -64,7 +69,7 @@ app.post('/login', async (req, res) => {
   try {
 
     const username = req.body.username;
-    const user = await db.oneOrNone('select * from users where username =  $1', username);
+    const user = await db.oneOrNone(`select * from users where username =  $1`, username);
 
     if (!user) {
       res.redirect('/register');
@@ -79,6 +84,7 @@ app.post('/login', async (req, res) => {
         res.redirect('/home');
         res.status(200).json({
           status: 'Success',
+          message: 'Log in successful.'
         });
       });
     } else {
@@ -86,17 +92,19 @@ app.post('/login', async (req, res) => {
     }
   } catch (error) {
     res.render('pages/login', { error: "Incorrect username or password." });
+    return console.log(error);
   }
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
   // hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
 
   //To-Do: Insert username and hashed password into 'users' table
   const add_user = `insert into users (username, password) values ($1, $2) returning * ;`; 
 
   db.task('add-user', task => {
-    return task.batch([task.any(add_user, [req.body.username])]);
+    return task.batch([task.any(add_user, [req.body.username, hash])]);
   })
   // if query execution succeeds, redirect to GET /login page
   // if query execution fails, redirect to GET /register route
