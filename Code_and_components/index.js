@@ -1,12 +1,16 @@
 const express = require('express');
 const app = express();
+const path = require("path");
 const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const bcrypt = require('bcrypt'); //  To hash passwords
+//const axios = require('axios');
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'init_data')));
 
 // set session
 app.use(
@@ -79,18 +83,19 @@ app.post('/login', async (req, res) => {
     const match = await bcrypt.compare(req.body.password, user.password);
   
     if (match) {
+      res.json({status: 'Success', message: 'Log in successful.'});
       req.session.user = user;
       req.session.save(() => {
-        res.redirect('/home');
         res.status(200).json({
-          status: 'Success',
-          message: 'Log in successful.'
+          status: 'Success'
         });
+        res.redirect('/home');
       });
     } else {
       throw new Error("Incorrect username or password.");
     }
   } catch (error) {
+    res.json({status: 'Failure', message: 'Incorrect username or password.'});
     res.render('pages/login', { error: "Incorrect username or password." });
     return console.log(error);
   }
@@ -109,11 +114,13 @@ app.post('/register', async (req, res) => {
   // if query execution succeeds, redirect to GET /login page
   // if query execution fails, redirect to GET /register route
       .then(data => {
+        res.json({status: 'Success', message: 'User successfully registered.'});
         res.redirect('/login');
       })
       // if query execution fails
       // send error message
       .catch(err => {
+        res.json({status: 'Failure', message: 'Issues registering user.'});
         console.log('Uh Oh spaghettio');
         console.log(err);
         res.redirect('/register');
