@@ -4,8 +4,10 @@ const path = require("path");
 const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const bcrypt = require('bcrypt'); //  To hash passwords
+const bcrypt = require('bcryptjs'); //  To hash passwords
 //const axios = require('axios');
+
+process.on('warning', e => console.warn(e.stack));
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
@@ -84,36 +86,35 @@ app.get('/toprecords', (req, res) => {
 app.post('/login', async (req, res) => {
   try {
 
-    const username = req.body.username;
-    const user = await db.oneOrNone(`select * from users where username =  $1`, username);
+    const query = 'SELECT * FROM users WHERE username = $1';
+    const find_user = await db.any(query, [req.body.username]);
 
-    if (!user) {
+    if (find_user.length === 0) {
+      res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
       res.redirect('/register');
-      return;
-    }
-
-    const match = await bcrypt.compare(req.body.password, user.password);
-  
-    if (match) {
-      res.json({status: 'Success', message: 'Log in successful.'});
-      req.session.user = user;
-      req.session.save(() => {
-        res.redirect('/home');
-      });
     } else {
-      throw new Error("Incorrect username or password.");
+      const match = await bcrypt.compare(req.body.password, find_user[0].password);
+      console.log(req.body.password, find_user[0].password);
+      
+      if (req.body.password === find_user[0].password) {
+        res.status(200).json({
+          status: 'Success',
+          message: 'Login successful.',
+        });
+      } else {
+        res.status(200).json({
+          status: 'Failure',
+          message: 'Incorrect username or password.',
+        });
+      }
     }
   } catch (error) {
-    res.json({status: 'Failure', message: 'Incorrect username or password.'});
-    res.render('pages/login'); // cannot set headers after they are sent to the client
-    return console.log(error);
+    console.log('error: ', error);
+    res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
 });
 
-// app.get register functionality??
-
 app.post('/register', async (req, res) => {
-
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
@@ -121,18 +122,18 @@ app.post('/register', async (req, res) => {
   const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`; 
  
   db.task('add-user', task => {
-    return task.batch([task.any(add_user, [req.body.username, hash])]);
+    return task.batch([task.any(add_user, [req.body.username, hash, req.body.first_name, req.body.last_name])]);
   })
   // if query execution succeeds, redirect to GET /login page
   // if query execution fails, redirect to GET /register route
       .then(data => {
-        res.json({status: 'Success', message: 'User successfully registered.'});
+        res.status(200).json({status: 'Success', message: 'User successfully registered.'});
         res.redirect('/login');
       })
       // if query execution fails
       // send error message
       .catch(err => {
-        res.json({status: 'Failure', message: 'Issues registering user.'});
+        res.status(200).json({status: 'Failure', message: 'Issues registering user.'});
         console.log('Uh Oh spaghettio');
         console.log(err);
         res.redirect('/register');
