@@ -32,10 +32,9 @@ it('positive : /login', done => {
   chai
     .request(server)
     .post('/login')
-    .send({username: 'mfalconer7', password: 'mlavrinov7', first_name: 'Milli', last_name: 'La Plaine-Saint-Denis'})
+    .send({username: 'hhawksley0', password: 'hsiemianowicz0', first_name: 'Harwilll', last_name: 'Eskilstuna'})
     .end((err, res) => {
       expect(res).to.have.status(200);
-      //expect(res.body.message).to.equals('Success');
       expect(res.body.status).to.equals('Success');
       expect(res.body.message).to.equals('Log in successful.');
       done();
@@ -48,9 +47,8 @@ it('Negative : /login. Checking invalid name', done => {
   chai
     .request(server)
     .post('/login')
-    .send({username: 'mfalconer7', password: 1234, first_name: 'Milli', last_name: 'La Plaine-Saint-Denis'})
+    .send({username: 'mfalcon', password: 1234})
     .end((err, res) => {
-      //fix status number
       expect(res).to.have.status(200);
       expect(res.body.status).to.equals('Failure');
       expect(res.body.message).to.equals('Incorrect username or password.');
