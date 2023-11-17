@@ -97,20 +97,22 @@ app.post("/login", async (req, res) => {
     if (match) {
       req.session.user = user;
       req.session.save(() => {
-        res.redirect('/discover');
+        res.status(200).json({
+          status: 'Success'
+        });
+        res.redirect('/home');
       });
     } else {
       throw new Error("Incorrect username or password.");
     }
   } catch (error) {
+    res.json({status: 'Failure', message: 'Incorrect username or password.'});
     res.render('pages/login', { error: "Incorrect username or password." });
+    return console.log(error);
   }
 });
 
-// app.get register functionality??
-
 app.post('/register', async (req, res) => {
-
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
