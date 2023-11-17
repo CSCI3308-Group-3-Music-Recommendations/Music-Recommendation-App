@@ -81,11 +81,11 @@ app.get('/toprecords', (req, res) => {
   res.render('pages/toprecords');
 });
 
-app.post('/login', async (req, res) => {
+app.post("/login", async (req, res) => {
   try {
 
     const username = req.body.username;
-    const user = await db.oneOrNone(`select * from users where username =  $1`, username);
+    const user = await db.oneOrNone('select * from users where username =  $1', username);
 
     if (!user) {
       res.redirect('/register');
@@ -95,18 +95,15 @@ app.post('/login', async (req, res) => {
     const match = await bcrypt.compare(req.body.password, user.password);
   
     if (match) {
-      res.json({status: 'Success', message: 'Log in successful.'});
       req.session.user = user;
       req.session.save(() => {
-        res.redirect('/home');
+        res.redirect('/discover');
       });
     } else {
       throw new Error("Incorrect username or password.");
     }
   } catch (error) {
-    res.json({status: 'Failure', message: 'Incorrect username or password.'});
-    res.render('pages/login'); // cannot set headers after they are sent to the client
-    return console.log(error);
+    res.render('pages/login', { error: "Incorrect username or password." });
   }
 });
 
@@ -126,13 +123,11 @@ app.post('/register', async (req, res) => {
   // if query execution succeeds, redirect to GET /login page
   // if query execution fails, redirect to GET /register route
       .then(data => {
-        res.json({status: 'Success', message: 'User successfully registered.'});
         res.redirect('/login');
       })
       // if query execution fails
       // send error message
       .catch(err => {
-        res.json({status: 'Failure', message: 'Issues registering user.'});
         console.log('Uh Oh spaghettio');
         console.log(err);
         res.redirect('/register');
@@ -141,7 +136,6 @@ app.post('/register', async (req, res) => {
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.render("pages/login");
   res.render("pages/login", {
     message: `Logged out successfully.`,
   });
@@ -161,7 +155,7 @@ app.use(auth)
 var client_id = 'a8a051d3f78f420295c99fdc4d712ede';
 var client_secret = 'e950fb4f69654075b05305d7aa871043'
 var redirect_uri = 'http://localhost:3000/callback';
-var spoitfy_linked = false;
+var spotify_linked = false;
 
 app.get('/spotifylogin', function(req, res) {
 
@@ -198,7 +192,7 @@ app.get('/callback', function(req, res) {
     localStorage.setItem('access_token',access_token);
     refresh_token = data.refresh_token;
     localStorage.setItem('refresh_token',refresh_token);
-    spoitfy_linked = true;
+    spotify_linked = true;
     console.log(access_token);
   })
   .catch(error => {
@@ -250,7 +244,6 @@ async function getTopTracks(){
     'v1/me/top/tracks?time_range=short_term&limit=10', 'GET'
   )).items;
 }
-
 
 app.get('/discover', async (req, res) => {
   const ticketmaster_api_key = "kUFeqGhN5NHBhB8Fafpu2jpS2gWPURt9"
