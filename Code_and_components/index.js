@@ -12,7 +12,8 @@ process.on('warning', e => console.warn(e.stack));
 // set the view engine to ejs
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'init_data')));
+app.use( express.static( "src" ) );
+//app.use(express.static(path.join(__dirname, 'init_data')));
 
 // set session
 app.use(
