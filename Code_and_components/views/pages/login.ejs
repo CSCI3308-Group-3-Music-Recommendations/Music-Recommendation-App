@@ -3,18 +3,23 @@
 
 <main>
   <div class="container">
-    <h2>Login</h2>
-    <form action="/login" method="POST">
-
-        <label for="usernname">Username:</label>
-        <input type="text" id="username" name="username" />
-
-        <label for="password">Password:</label>
-        <input type="text" id="password" name="password" />
-
-        <input type="submit" value="Login" />
+    <h1 class="horizontal-center display-5" style="padding-top: 30px; padding-bottom: 30px;">Login</h1>
+    <div class="horizontal-center">
+      <form action="/login" method="POST">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input type="text" class="form-control" id="username" name="username"/>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input type="password" class="form-control" id="password" name="password"/>
+        </div>
+        <div class="mb-3">
+          <p>If you do not have an account, register <a href="/register">here</a>.</p>
+        </div>
+          <button type="submit" class="btn btn-primary" value="Login">Login</button>
       </form>
-      <p>If you do not have an account, register <a href="/register">here</a></p>
+    </div>
   </div>
 </main>
 

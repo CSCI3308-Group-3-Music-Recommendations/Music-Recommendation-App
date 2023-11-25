@@ -84,35 +84,69 @@ app.get('/toprecords', (req, res) => {
   res.render('pages/toprecords');
 });
 
-app.post('/login', async (req, res) => {
+// app.post('/login', async (req, res) => {
+//   try {
+
+//     const query = 'SELECT * FROM users WHERE username = $1';
+//     const find_user = await db.any(query, [req.body.username]);
+
+//     if (find_user.length === 0) {
+//       res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
+//       res.redirect('/register');
+//     } else {
+//       const match = await bcrypt.compare(req.body.password, find_user[0].password);
+//       console.log(req.body.password, find_user[0].password);
+      
+//       if (req.body.password === find_user[0].password) {
+//         res.status(200).json({
+//           status: 'Success',
+//           message: 'Login successful.',
+//         });
+//       } else {
+//         res.status(200).json({
+//           status: 'Failure',
+//           message: 'Incorrect username or password.',
+//         });
+//       }
+//     }
+//   } catch (error) {
+//     console.log('error: ', error);
+//     res.status(500).json({ status: 'error', message: 'Internal server error' });
+//   }
+// });
+
+app.post("/login", async (req, res) => {
   try {
 
-    const query = 'SELECT * FROM users WHERE username = $1';
-    const find_user = await db.any(query, [req.body.username]);
+    const username = req.body.username;
+    const find_user = await db.oneOrNone('select * from users where username =  $1', username);
 
-    if (find_user.length === 0) {
-      res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
+    if (!find_user) {
       res.redirect('/register');
+      return;
+    }
+
+    const match = await bcrypt.compare(req.body.password, find_user.password);
+  
+    if (match) {
+      user.username = username;
+      user.first_name = find_user.first_name;
+      user.last_name = find_user.last_name;
+
+      req.session.user = user;
+      req.session.save(() => {
+        res.redirect('/profile');
+      });
     } else {
-      const match = await bcrypt.compare(req.body.password, find_user[0].password);
-      console.log(req.body.password, find_user[0].password);
-      
-      if (req.body.password === find_user[0].password) {
-        res.status(200).json({
-          status: 'Success',
-          message: 'Login successful.',
-        });
-      } else {
-        res.status(200).json({
-          status: 'Failure',
-          message: 'Incorrect username or password.',
-        });
-      }
+      throw new Error("Incorrect username or password.");
     }
   } catch (error) {
-    console.log('error: ', error);
-    res.status(500).json({ status: 'error', message: 'Internal server error' });
+    res.render('pages/login', { error: "Incorrect username or password." });
   }
+});
+
+app.get('/register', (req, res) => {
+  res.render('pages/register')
 });
 
 app.post('/register', async (req, res) => {
@@ -120,26 +154,34 @@ app.post('/register', async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, 10);
 
   //To-Do: Insert username and hashed password into 'users' table
-  const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`; 
+  const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`;
  
   db.task('add-user', task => {
     return task.batch([task.any(add_user, [req.body.username, hash, req.body.first_name, req.body.last_name])]);
   })
-  // if query execution succeeds, redirect to GET /login page
-  // if query execution fails, redirect to GET /register route
-      .then(data => {
-        res.status(200).json({status: 'Success', message: 'User successfully registered.'});
-        res.redirect('/login');
-      })
-      // if query execution fails
-      // send error message
-      .catch(err => {
-        res.status(200).json({status: 'Failure', message: 'Issues registering user.'});
-        console.log('Uh Oh spaghettio');
-        console.log(err);
-        res.redirect('/register');
-      });
-})
+    // if query execution succeeds, redirect to GET /login page
+    // if query execution fails, redirect to GET /register route
+    .then(data => {
+      //res.status(200).json({status: 'Success', message: 'User successfully registered.'});
+      res.redirect('/login');
+    })
+    // if query execution fails
+    // send error message
+    .catch(err => {
+      //res.status(200).json({status: 'Failure', message: 'Issues registering user.'});
+      console.log('Uh Oh spaghettio');
+      console.log(err);
+      res.redirect('/register');
+    });
+});
+
+app.get('/profile', (req, res) => {
+  res.render('pages/profile', {
+    username: req.session.user.username,
+    first_name: req.session.user.first_name,
+    last_name: req.session.user.last_name,
+  });
+});
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
@@ -147,18 +189,7 @@ app.get('/logout', (req, res) => {
   res.render("pages/login", {
     message: `Logged out successfully.`,
   });
-})
-
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
-
-app.use(auth)
+});
 
 var client_id = 'a8a051d3f78f420295c99fdc4d712ede';
 var client_secret = 'e950fb4f69654075b05305d7aa871043'
@@ -245,13 +276,13 @@ async function fetchWebApi(endpoint, method, body) {
     body:JSON.stringify(body)
   });
   return await res.json();
-}
+};
 
 async function getTopTracks(){
   return (await fetchWebApi(
     'v1/me/top/tracks?time_range=short_term&limit=10', 'GET'
   )).items;
-}
+};
 
 
 app.get('/discover', async (req, res) => {
@@ -282,5 +313,17 @@ app.get('/discover', async (req, res) => {
     }
   
 });
+
+// ---------------------------------------------------------------------------------------------------------
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+app.use(auth)
 
 module.exports = app.listen(3000);
