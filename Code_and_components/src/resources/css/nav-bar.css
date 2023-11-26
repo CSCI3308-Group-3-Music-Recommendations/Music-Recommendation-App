@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 body {
     position: relative;
 }
@@ -30,24 +34,22 @@ body {
 
 .footer {
     position: fixed;
-    left: 0;
-    bottom: 0;
+    left: 0px;
+    bottom: 0px;
     width: 100%;
     padding-top: 15px;
     padding-bottom: 5px;
 }
 
-.center {
-    width: 100%;
+.copyright {
+    width: 50%;
+    margin: auto;
     text-align: center;
 }
 
 a.copyright:link, a.copyright:visited, a.copyright:focus {
     color: white;
     text-decoration: none;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
 }
 
 a.copyright:hover {
@@ -56,12 +58,26 @@ a.copyright:hover {
 }
 
 .socials {
-    width: 100%;
     position: absolute;
-    z-index: 10;
-    /* margin-right: 10px; */
     right: 10px;
     display: flex;
+}
+
+.contact {
+    position: absolute;
+    left: 10px;
+    display: flex;
+    width: 23%;
+}
+
+a.contact:link, a.contact:visited, a.contact:focus {
+    color: white;
+    text-decoration: none;
+}
+
+a.contact:hover {
+    color: darkgray;
+    text-decoration: none;
 }
 
 table {

@@ -68,6 +68,14 @@ app.get('/', (req, res) => {
   res.redirect('/login'); //this will call /login route in the API
 });
 
+app.get('/discover', (req, res) => {
+  res.render('pages/discover');
+});
+
+app.get('/home', (req, res) => {
+  res.render('pages/home');
+});
+
 app.get('/login', (req, res) => {
   res.render('pages/login');
 });
@@ -83,37 +91,6 @@ app.get('/topartists', (req, res) => {
 app.get('/toprecords', (req, res) => {
   res.render('pages/toprecords');
 });
-
-// app.post('/login', async (req, res) => {
-//   try {
-
-//     const query = 'SELECT * FROM users WHERE username = $1';
-//     const find_user = await db.any(query, [req.body.username]);
-
-//     if (find_user.length === 0) {
-//       res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
-//       res.redirect('/register');
-//     } else {
-//       const match = await bcrypt.compare(req.body.password, find_user[0].password);
-//       console.log(req.body.password, find_user[0].password);
-      
-//       if (req.body.password === find_user[0].password) {
-//         res.status(200).json({
-//           status: 'Success',
-//           message: 'Login successful.',
-//         });
-//       } else {
-//         res.status(200).json({
-//           status: 'Failure',
-//           message: 'Incorrect username or password.',
-//         });
-//       }
-//     }
-//   } catch (error) {
-//     console.log('error: ', error);
-//     res.status(500).json({ status: 'error', message: 'Internal server error' });
-//   }
-// });
 
 app.post("/login", async (req, res) => {
   try {
@@ -194,7 +171,7 @@ app.get('/logout', (req, res) => {
 var client_id = 'a8a051d3f78f420295c99fdc4d712ede';
 var client_secret = 'e950fb4f69654075b05305d7aa871043'
 var redirect_uri = 'http://localhost:3000/callback';
-var spoitfy_linked = false;
+var spotify_linked = false;
 
 app.get('/spotifylogin', function(req, res) {
 
@@ -231,7 +208,7 @@ app.get('/callback', function(req, res) {
     localStorage.setItem('access_token',access_token);
     refresh_token = data.refresh_token;
     localStorage.setItem('refresh_token',refresh_token);
-    spoitfy_linked = true;
+    spotify_linked = true;
     console.log(access_token);
   })
   .catch(error => {
