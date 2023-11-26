@@ -97,9 +97,12 @@ app.post("/login", async (req, res) => {
 
     const username = req.body.username;
     const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+    console.log(req.body.password);
+    console.log(find_user.password);
 
     if (!find_user) {
-      res.redirect('/register');
+      res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
+      //res.redirect('/register');
       return;
     }
 
@@ -112,13 +115,17 @@ app.post("/login", async (req, res) => {
 
       req.session.user = user;
       req.session.save(() => {
+        res.status(200).json({ status: 'Success', message: 'Login successful.' });
         res.redirect('/profile');
       });
     } else {
-      throw new Error("Incorrect username or password.");
+      //throw new Error("Incorrect username or password.");
+      res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
     }
   } catch (error) {
-    res.render('pages/login', { error: "Incorrect username or password." });
+    console.log('error: ', error);
+    res.status(500).json({ status: 'error', message: 'Internal server error.' });
+    //res.render('pages/login', { error: "Incorrect username or password." });
   }
 });
 
@@ -139,16 +146,16 @@ app.post('/register', async (req, res) => {
     // if query execution succeeds, redirect to GET /login page
     // if query execution fails, redirect to GET /register route
     .then(data => {
-      //res.status(200).json({status: 'Success', message: 'User successfully registered.'});
-      res.redirect('/login');
+      res.status(200).json({status: 'Success', message: 'User successfully registered.'});
+      //res.redirect('/login');
     })
     // if query execution fails
     // send error message
     .catch(err => {
-      //res.status(200).json({status: 'Failure', message: 'Issues registering user.'});
+      res.status(200).json({status: 'Failure', message: 'Issues registering user.'});
       console.log('Uh Oh spaghettio');
       console.log(err);
-      res.redirect('/register');
+      //res.redirect('/register');
     });
 });
 
