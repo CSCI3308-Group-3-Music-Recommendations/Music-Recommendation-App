@@ -173,9 +173,21 @@ var client_secret = 'e950fb4f69654075b05305d7aa871043'
 var redirect_uri = 'http://localhost:3000/callback';
 var spotify_linked = false;
 
+const AUTHORIZE = "https://accounts.spotify.com/authorize"
+
 app.get('/spotifylogin', function(req, res) {
 
   console.log("in login")
+
+  let url = AUTHORIZE;
+  url += "?client_id=" + client_id;
+  url += "&response_type=code";
+  url += "&redirect_uri=" + encodeURI(redirect_uri);
+  url += "&show_dialog=true";
+  url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private";
+  res.redirect(url); // Show Spotify's authorization screen
+
+  /*
 
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
@@ -183,6 +195,8 @@ app.get('/spotifylogin', function(req, res) {
       client_id: client_id,
       redirect_uri: redirect_uri
     }));
+
+    */
 });
 
 app.get('/callback', function(req, res) {
