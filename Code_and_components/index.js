@@ -256,7 +256,7 @@ app.get('/discover', async (req, res) => {
         },
         params: {
           apikey: TICKETMASTER_API_KEY,
-          keyword: artists, //you can choose any artist/event here
+          keyword: "SZA", //you can choose any artist/event here
           size: 20 // you can choose the number of events you would like to return
         },
       })
@@ -264,12 +264,16 @@ app.get('/discover', async (req, res) => {
       res.render('pages/discover', {events: events})
     }
     catch(error){
-      console.error(err);
-      res.render('pages/discover', {events: {} , error: 'failed'})
+      console.error(error);
+      res.render('pages/discover', {events: [] , error: 'failed'})
     }
   
 });
 
+
+app.get('/recommendations', (req, res) => {
+  res.render('pages/recommendations');
+})
 
 //recommend api
 app.get('/searchSong', async (req, res) => {
@@ -288,8 +292,8 @@ app.get('/searchSong', async (req, res) => {
     res.render('pages/recommendations', {tracks: searchResults})
   }
   catch(error){
-    console.error(err);
-    res.render('pages/recommendations', {song: {},error: 'failed'})
+    console.error(error);
+    res.render('pages/recommendations', {song: [],error: 'failed'})
   }
 });
 
