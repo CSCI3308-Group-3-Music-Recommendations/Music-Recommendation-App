@@ -255,7 +255,7 @@ app.get('/discover', async (req, res) => {
           'Accept-Encoding': 'application/json',
         },
         params: {
-          apikey: TICKETMASTER_API_KEY,
+          apikey: process.env.TICKETMASTER_API_KEY,
           keyword: "SZA", //you can choose any artist/event here
           size: 20 // you can choose the number of events you would like to return
         },
@@ -272,28 +272,21 @@ app.get('/discover', async (req, res) => {
 
 
 app.get('/recommendations', (req, res) => {
-  res.render('pages/recommendations');
+  res.render('pages/recommendations', {tracks: []});
 })
 
 //recommend api
 app.get('/searchSong', async (req, res) => {
-  const input_song = req.body.InputSong
+  let input_song = req.query.InputSong
+  let searchUrl = `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${input_song}&api_key=${process.env.LAST_FM_API_KEY}&format=json`
   try{
-    const response = await axios({
-        url: 'http://ws.audioscrobbler.com/2.0',
-        params: {
-          method: 'track.search',
-          api_key: LAST_FM_API_KEY,
-          track: input_song,
-          format: 'json',
-        },
-  })
+    const response = await axios({url: searchUrl})
     const searchResults = response.data.results.trackmatches.track   
     res.render('pages/recommendations', {tracks: searchResults})
   }
   catch(error){
     console.error(error);
-    res.render('pages/recommendations', {song: [],error: 'failed'})
+    res.render('pages/recommendations', {tracks: [],error: 'failed'})
   }
 });
 
