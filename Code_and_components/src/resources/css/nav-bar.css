@@ -1,0 +1,103 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    position: relative;
+}
+
+#navbar li{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#navbar-icon {
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.nav-item {
+    font-size: 16.5px;
+}
+
+.horizontal-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.footer {
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    padding-top: 15px;
+    padding-bottom: 5px;
+}
+
+.copyright {
+    width: 50%;
+    margin: auto;
+    text-align: center;
+}
+
+a.copyright:link, a.copyright:visited, a.copyright:focus {
+    color: white;
+    text-decoration: none;
+}
+
+a.copyright:hover {
+    color: darkgray;
+    text-decoration: none;
+}
+
+.socials {
+    position: absolute;
+    right: 10px;
+    display: flex;
+}
+
+.contact {
+    position: absolute;
+    left: 10px;
+    display: flex;
+    width: 23%;
+}
+
+a.contact:link, a.contact:visited, a.contact:focus {
+    color: white;
+    text-decoration: none;
+}
+
+a.contact:hover {
+    color: darkgray;
+    text-decoration: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}

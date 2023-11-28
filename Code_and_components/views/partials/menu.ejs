@@ -1,34 +1,48 @@
-
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">
-        <img src="Code_and_components\src\resources\img\BeatBuddyIcon.png" alt="BeatBuddy Icon">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
+      <a class="navbar-brand" href="/" style="margin-left: 10px;">
+        <img src="/resources/img/BeatBuddyIcon.png" alt="BeatBuddy Icon" width="50" height="50" style="border-radius: 50%">
+        BeatBuddy
       </a>
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-            <a class="nav-link active" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/">Recommend</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/">Top Tracks</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/">Top Artists</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/">Top Records</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/">Discover</a>
-        </li>
-      </ul>
-      <a class="nav-link active" href="/">
-        <img src="Code_and_components\src\resources\img\Spotify_icon.png" href="/spotifylogin" alt="Spofity Icon">
-      </a>
-        <a class="navbar-brand" href="/">
-            <img src="Code_and_components\src\resources\img\Profile_icon.webp" alt="Profile Icon">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+              <a class="nav-link" href="/home">Home</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/toptracks">Top Tracks</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/topartists">Top Artists</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/toprecords">Top Records</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/discover">Discover</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/spotifylogin">
+              <img src="/resources/img/Spotify_icon.png" alt="Spotify Icon" width="30" height="30">
+              Spotify
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/profile">
+              <img src="/resources/img/Profile_icon.webp" alt="Profile Icon" width="30" height="30" style="border-radius: 10%">
+              Profile
+            </a>
+          </li>
+        </ul>
+        <div class="nav-item me-1">
+          <a class="nav-link" href="/logout">Logout</a>
+        </div>
+        <!-- <a class="nav-link" href="/">
+          <img src="Code_and_components\src\resources\img\Spotify_icon.png" href="/spotifylogin" alt="Spofity Icon" width="30" height="30">
         </a>
+        <a class="navbar-brand" href="/">
+            <img src="Code_and_components\src\resources\img\Profile_icon.webp" alt="Profile Icon" width="30" height="30">
+        </a> -->
+      </div>
     </nav>
   </header>
