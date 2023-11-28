@@ -2,41 +2,43 @@
 <%- include ('../partials/menu') %>
 
 
-/*
-    Use last.fm to autocorrect user input, then from there feed that to spotify API
-*/
+
 <main>
     <div class="container">
         <form action="/searchSong" method="get">
             <div class="mb-4">
                 <label class="form-label" for="InputSong">Type a song to get similar recommendations</label>
-                <input type="text" name="InputSong" class="form-control">
+                <input type="text" name="InputSong" class="form-control" id="InputSong" />
             </div>  
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
+        <table class="table table-dark table-hover">
         <%
         if (tracks)
-        {
-            tracks.forEach(function(track){ %>
+        { %>
+            <thead>
+                <th scope="col">Name</th>
+                <th scope="col">Artist</th>
+                <th scope="col"></th>
+            </thead>
+           <% for (let track of tracks){ %>
                 <tr>
                     <td id="track-name">
                         <%=track.name%>
                     </td>
                     <td id="track-artist">
-                        <%=track.artist.name%>
+                        <%=track.artist%>
                     </td>
                     <td>
-                        <img src="<%=track.image%>" alt="track image">
-                    </td>
-                    <td>
-                        <button class="btn btn-primary" onclick="recommendSong()"></button>
+                        <button class="btn btn-primary" onclick="recommendSong()">Get Recommendations</button>
                     </td>
                 </tr>
-           <% })
+           <% }
         }     
         %>
+        </table>
     </div>
 </main>
 
