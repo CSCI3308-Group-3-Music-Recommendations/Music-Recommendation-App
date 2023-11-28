@@ -5,7 +5,7 @@ const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcryptjs'); //  To hash passwords
-//const axios = require('axios');
+const axios = require('axios');
 
 process.on('warning', e => console.warn(e.stack));
 
@@ -169,20 +169,19 @@ app.get('/logout', (req, res) => {
 });
 
 var client_id = 'a8a051d3f78f420295c99fdc4d712ede';
-var client_secret = 'e950fb4f69654075b05305d7aa871043'
+var client_secret = 'e950fb4f69654075b05305d7aa871043';
 var redirect_uri = 'http://localhost:3000/callback';
 var spotify_linked = false;
+var access_token;
 
 const AUTHORIZE = "https://accounts.spotify.com/authorize"
 
 app.get('/spotifylogin', function(req, res) {
 
-  console.log("in login")
-
   let url = AUTHORIZE;
   url += "?client_id=" + client_id;
   url += "&response_type=code";
-  url += "&redirect_uri=" + encodeURI(redirect_uri);
+  url += "&redirect_uri=" + redirect_uri;
   url += "&show_dialog=true";
   url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private";
   res.redirect(url); // Show Spotify's authorization screen
@@ -201,61 +200,28 @@ app.get('/spotifylogin', function(req, res) {
 
 app.get('/callback', function(req, res) {
 
-  var code = req.query.code || null;
-
-  var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      code: code,
-      redirect_uri: redirect_uri,
-      grant_type: 'authorization_code'
-    },
+  const authConfig = {
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
-    },
-    json: true
+        Authorization: `Basic ${Buffer.from(
+            `${client_id}:${client_secret}`
+        ).toString('base64')}`,
+      }
   };
   
-  axios(authOptions).then(data => {
-    access_token = data.access_token;
-    localStorage.setItem('access_token',access_token);
-    refresh_token = data.refresh_token;
-    localStorage.setItem('refresh_token',refresh_token);
+  axios.post(
+      'https://accounts.spotify.com/api/token',
+      'grant_type=client_credentials',
+      authConfig
+  ).then(data => {
+    access_token = data.data.access_token;
+    //refresh_token = data.refresh_token;
+    //localStorage.setItem('refresh_token',refresh_token);
     spotify_linked = true;
-    console.log(access_token);
+    res.redirect('/toptracks');
   })
   .catch(error => {
     console.log(error);
   })
-});
-
-app.get('/refresh_token', function(req, res) {
-
-  var refresh_token = req.query.refresh_token;
-  var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
-    },
-    form: {
-      grant_type: 'refresh_token',
-      refresh_token: refresh_token
-    },
-    json: true
-  };
-
-  request.post(authOptions, function(error, response, body) {
-    if (!error && response.statusCode === 200) {
-      var access_token = body.access_token,
-          refresh_token = body.refresh_token;
-      res.send({
-        'access_token': access_token,
-        'refresh_token': refresh_token
-      });
-    }
-  });
 });
 
 async function fetchWebApi(endpoint, method, body) {
