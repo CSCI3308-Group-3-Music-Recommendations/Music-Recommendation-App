@@ -41,6 +41,12 @@ app.use(
   })
 );
 
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
@@ -80,23 +86,31 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post('/register', (req, res) => {
+app.get('/register', (req, res) => {
+  res.render('pages/register');
+});
+
+app.post('/register', async (req, res) => {
   // hash the password using bcrypt library
-
+  const hash = await bcrypt.hash(req.body.password, 10);
   //To-Do: Insert username and hashed password into 'users' table
-  const add_user = `insert into users (username, password) values ($1, $2) returning * ;`; 
+  //const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`; 
 
+  /*
   db.task('add-user', task => {
-    return task.batch([task.any(add_user, [req.body.username])]);
+    return task.batch([task.any(add_user, [req.body.username, hash, req.body.firstname, req.body.lastname])]);
   })
+  */
+ db.any(`insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`, 
+ [req.body.username, hash, req.body.firstname, req.body.lastname])
   // if query execution succeeds, redirect to GET /login page
   // if query execution fails, redirect to GET /register route
-      .then(data => {
+      .then((data) => {
         res.redirect('/login');
       })
       // if query execution fails
       // send error message
-      .catch(err => {
+      .catch((err) => {
         console.log('Uh Oh spaghettio');
         console.log(err);
         res.redirect('/register');
