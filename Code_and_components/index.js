@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios');
+const { access } = require('fs');
 
 process.on('warning', e => console.warn(e.stack));
 
@@ -183,36 +184,32 @@ app.get('/spotifylogin', function(req, res) {
   url += "&response_type=code";
   url += "&redirect_uri=" + redirect_uri;
   url += "&show_dialog=true";
-  url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private";
+  url += "&scope=user-read-private user-read-email";
   res.redirect(url); // Show Spotify's authorization screen
 
-  /*
-
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      redirect_uri: redirect_uri
-    }));
-
-    */
 });
 
 app.get('/callback', function(req, res) {
 
   const authConfig = {
     headers: {
-        Authorization: `Basic ${Buffer.from(
-            `${client_id}:${client_secret}`
-        ).toString('base64')}`,
-      }
+      'content-type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+    }
   };
-  
+
+  var inputCode = req.query.code || null;
+
   axios.post(
-      'https://accounts.spotify.com/api/token',
-      'grant_type=client_credentials',
-      authConfig
+      'https://accounts.spotify.com/api/token?',
+      {
+        grant_type: 'authorization_code',
+        code: inputCode,
+        redirect_uri: redirect_uri
+      },
+      authConfig,
   ).then(data => {
+    console.log(data)
     access_token = data.data.access_token;
     //refresh_token = data.refresh_token;
     //localStorage.setItem('refresh_token',refresh_token);
@@ -224,22 +221,43 @@ app.get('/callback', function(req, res) {
   })
 });
 
-async function fetchWebApi(endpoint, method, body) {
-  const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+async function getProfile(accessToken) {
+  const response = await fetch('https://api.spotify.com/v1/me', {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-    },
-    method,
-    body:JSON.stringify(body)
+      Authorization: 'Bearer ' + accessToken
+    }
   });
-  return await res.json();
-};
 
-async function getTopTracks(){
-  return (await fetchWebApi(
-    'v1/me/top/tracks?time_range=short_term&limit=10', 'GET'
-  )).items;
-};
+  const data = await response.json();
+  console.log(data);
+}
+
+
+app.get('/getTopTracks', function(req, res) {
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${access_token}`,
+      }
+  };
+
+  axios.get(
+    "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10",
+    config
+    ).then(response => {
+      //setTopArtists(response.data.items);
+      console.log(response)
+      topArtists = response.data.items;
+      //setTopArtistsActivated(true);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+
+  res.redirect('/toptracks');
+
+  //console.log(topArtists); 
+});
 
 
 app.get('/discover', async (req, res) => {
