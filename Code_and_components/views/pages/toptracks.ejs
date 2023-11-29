@@ -4,7 +4,27 @@
 <main>
   <div class="container">
     <a href="/spotifylogin">Log into spotify</a>
-      
+    <a href="/getTopTracks">Get Top Tracks</a>
+    <div class="row">
+      <%
+        let songs = [];
+        for (let song of songs){ %>
+          <div class="col mb-4 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title"><%=song.name%></h4>
+                <p class="card-text">
+                    Album: <%=song.album.name%>
+                    <br>
+                    Artist: <%=song.artists[0]%>
+                </p>
+                <a href="<%=song.preview_url %>" class="btn btn-primary"> Listen Now</a>
+              </div>
+            </div>
+          </div>
+       <% }
+      %>
+  </div>
     </div>
   </div>
 </main>
