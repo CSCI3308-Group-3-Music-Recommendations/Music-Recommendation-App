@@ -186,7 +186,7 @@ app.get('/spotifylogin', function(req, res) {
   url += "&response_type=code";
   url += "&redirect_uri=" + redirect_uri;
   url += "&show_dialog=true";
-  url += "&scope=user-read-private user-read-email";
+  url += "&scope=user-read-private user-read-email user-top-read";
   res.redirect(url); // Show Spotify's authorization screen
 
 });
@@ -241,8 +241,7 @@ app.get('/getTopTracks', function(req, res) {
     headers: {
         Authorization: `Bearer ${access_token}`,
       }
-  }
-
+  };
 
   axios.get(
     "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10",
@@ -250,13 +249,14 @@ app.get('/getTopTracks', function(req, res) {
     ).then(response => {
       //setTopArtists(response.data.items);
       console.log(response)
-      topTracks = response.data.items;
-      res.redirect('/toptracks', {tracks: topTracks});
+      topArtists = response.data.items;
       //setTopArtistsActivated(true);
   })
   .catch(error => {
     console.log(error);
   })
+
+  res.redirect('/toptracks');
 });
 
 app.get('/discover', (req, res) => {
