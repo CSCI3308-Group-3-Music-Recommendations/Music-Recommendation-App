@@ -129,6 +129,19 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  
+  const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+
+    if (find_user) {
+      res.redirect('/register');
+      console.log("Username has already been used.")
+      //#error-message
+      document.querySelector("#error-message").textContent = "Username has already been taken"; //grabs the empty paragraph from register page
+      return;
+    }
+    document.querySelector("#error-message").textContent = ""; //empties paragraph 
+    
+    
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
