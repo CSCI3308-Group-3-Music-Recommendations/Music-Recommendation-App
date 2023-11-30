@@ -229,19 +229,38 @@ app.get('/callback', function(req, res) {
 async function fetchWebApi(endpoint, method, body) {
   const res = await fetch(`https://api.spotify.com/${endpoint}`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-    },
-    method,
-    body:JSON.stringify(body)
+      Authorization: 'Bearer ' + accessToken
+    }
   });
-  return await res.json();
-};
 
-async function getTopTracks(){
-  return (await fetchWebApi(
-    'v1/me/top/tracks?time_range=short_term&limit=10', 'GET'
-  )).items;
-};
+  const data = await response.json();
+  console.log(data);
+}
+
+
+app.get('/getTopTracks', function(req, res) {
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${access_token}`,
+      }
+  }
+
+
+  axios.get(
+    "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10",
+    config
+    ).then(response => {
+      //setTopArtists(response.data.items);
+      console.log(response)
+      topTracks = response.data.items;
+      res.redirect('/toptracks', {tracks: topTracks});
+      //setTopArtistsActivated(true);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+});
 
 app.get('/discover', (req, res) => {
   res.render('pages/discover', {events: []})
