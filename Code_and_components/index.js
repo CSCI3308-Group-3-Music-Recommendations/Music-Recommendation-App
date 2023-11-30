@@ -224,11 +224,14 @@ app.get('/callback', function(req, res) {
       },
       authConfig,
   ).then(data => {
-    console.log(data)
+    //console.log(data)
     access_token = data.data.access_token;
     //refresh_token = data.refresh_token;
     //localStorage.setItem('refresh_token',refresh_token);
     spotify_linked = true;
+
+
+
     res.redirect('/toptracks');
   })
   .catch(error => {
@@ -248,7 +251,9 @@ async function getProfile(accessToken) {
 }
 
 
-app.get('/getTopTracks', function(req, res) {
+app.get('/getTopTracks/:time_range', function(req, res) {
+  let time_range = req.params.time_range;
+  let url = `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=10`;
 
   const config = {
     headers: {
@@ -257,12 +262,12 @@ app.get('/getTopTracks', function(req, res) {
   };
 
   axios.get(
-    "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10",
+    url,
     config
     ).then(response => {
       //setTopArtists(response.data.items);
-      console.log(response)
       topArtists = response.data.items;
+      console.log(topArtists);
       //setTopArtistsActivated(true);
   })
   .catch(error => {
