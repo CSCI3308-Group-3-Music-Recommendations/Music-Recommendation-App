@@ -255,40 +255,80 @@ app.get('/getTopTracks', function(req, res) {
     console.log(error);
   })
 
+app.get('/discover', (req, res) => {
+  res.render('pages/discover', {events: []})
+});
   res.redirect('/toptracks');
 
-  //console.log(topArtists); 
-});
-
-app.get('/discover', (req, res) => {
-  axios({
-    url: `https://app.ticketmaster.com/discovery/v2/events.json`,
-    method: 'GET',
-    dataType: 'json',
-    headers: {
-    'Accept-Encoding': 'application/json',
-    },
-    params: {
-    apikey: "KxA12tQOSBVKsy3zUpHUef7vNxac5byk",
-    size: 12 // you can choose the number of events you would like to return
-    },
-    })
-      .then(results => {
-        console.log(results.data._embedded.events[0].dates.start); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-        res.render('pages/discover',{
-        results
-      })
-      })
-      .catch(error => {
-      // Handle errors
-
-      console.log(error);
-      res.render('pages/discover', {
-      results: []
-      })
+  app.get('/discoverSearch', async (req, res) => {
+    const query = `SELECT long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
+    const artists = await db.any(query);
+    if (artists)
+    {
+      try{
+        const response = await axios({
+            url: `https://app.ticketmaster.com/discovery/v2/events.json`,
+            method: 'GET',
+            dataType: 'json',
+            headers: {
+              'Accept-Encoding': 'application/json',
+            },
+            params: {
+              apikey: process.env.TICKETMASTER_API_KEY,
+              keyword: artists, //you can choose any artist/event here
+              size: 20 // you can choose the number of events you would like to return
+            },
+          })
+          const events = response.data._embedded.events;
+          res.render('pages/discover', {events: events})
+        }
+        catch(error){
+          console.error(error);
+          res.render('pages/discover', {events: [] , error: 'failed'})
+        }
+    }
+    else
+    {
+      res.render('pages/discover', {events: []});
+    }
   });
   
+
+  app.get('/recommendations', (req, res) => {
+    res.render('pages/recommendations', {tracks: []});
   });
+  
+  //recommend api
+  app.get('/searchSong', async (req, res) => {
+    let input_song = req.query.InputSong
+    let searchUrl = `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${input_song}&api_key=${process.env.LAST_FM_API_KEY}&format=json`
+    try{
+      const response = await axios({url: searchUrl})
+      const searchResults = response.data.results.trackmatches.track   
+      res.render('pages/recommendations', {tracks: searchResults})
+    }
+    catch(error){
+      console.error(error);
+      res.render('pages/recommendations', {tracks: [],error: 'failed'})
+    }
+  });
+
+app.post('/displayResults', async (req, res) => {
+    let track = req.body.trackName
+    let artist = req.body.trackArtist
+    const url = `http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=${artist}&track=${track}&api_key=${process.env.LAST_FM_API_KEY}&format=json`
+    try{
+       const response = await axios({url: url})
+       const searchResults = response.data.similartracks.track   
+       res.render('pages/recResults', {tracks: searchResults})
+    }
+    catch(error){
+      console.error(error);
+      res.render('pages/recResults', {tracks: [],error: 'failed'})
+    }
+    
+});
+
 
 // ---------------------------------------------------------------------------------------------------------
 // Authentication Middleware.

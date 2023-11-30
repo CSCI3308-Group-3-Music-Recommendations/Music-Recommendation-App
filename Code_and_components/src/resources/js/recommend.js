@@ -2,6 +2,7 @@ const axios = require(axios)
 
 async function recommendSong()
 {
+    console.log("clicked button");
     let track = document.getElementById('track-name')
     let artist = document.getElementById('artist-name')
     const url = `http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=${artist}&track=${track}&api_key=${LAST_FM_API_KEY}&format=json`
