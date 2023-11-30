@@ -1,0 +1,41 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+
+<main>
+    <div class="container">
+        <h2>Search Results:</h2>
+        <table>
+        <%
+        if (tracks)
+        { %>
+            <thead>
+                <th scope="col">Name</th>
+                <th scope="col">Artist</th>
+                <th scope="col">Listens</th>
+            </thead>
+           <% for (let track of tracks){ %>
+                <tr>
+                    <td id="track-name">
+                        <%=track.name%>
+                    </td>
+                    <td id="track-artist">
+                        <%=track.artist.name%>
+                    </td>
+                    <td id="track-plays">
+                        <%=track.playcount%>
+                    </td>
+                </tr>
+           <% }
+        }
+        else
+        { %>
+            <h2>Sorry! There are no results for your current song!</h2>
+        <% }     
+        %>
+        </table>
+    </div>
+</main>
+
+
+<%- include ('../partials/footer') %>
