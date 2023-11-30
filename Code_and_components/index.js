@@ -240,7 +240,8 @@ app.get('/getTopTracks', function(req, res) {
     headers: {
         Authorization: `Bearer ${access_token}`,
       }
-  };
+  }
+
 
   axios.get(
     "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10",
@@ -248,17 +249,19 @@ app.get('/getTopTracks', function(req, res) {
     ).then(response => {
       //setTopArtists(response.data.items);
       console.log(response)
-      topArtists = response.data.items;
+      topTracks = response.data.items;
+      res.redirect('/toptracks', {tracks: topTracks});
       //setTopArtistsActivated(true);
   })
   .catch(error => {
     console.log(error);
   })
+});
 
 app.get('/discover', (req, res) => {
   res.render('pages/discover', {events: []})
 });
-  res.redirect('/toptracks');
+  
 
   app.get('/discoverSearch', async (req, res) => {
     const query = `SELECT long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
