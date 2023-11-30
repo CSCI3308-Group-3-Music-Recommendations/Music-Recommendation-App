@@ -130,7 +130,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  
+  const username = req.body.username;
   const find_user = await db.oneOrNone('select * from users where username =  $1', username);
 
     if (find_user) {
