@@ -112,6 +112,7 @@ app.post("/login", async (req, res) => {
 
       req.session.user = user;
       req.session.save(() => {
+        console.log("Logging in...");
         res.redirect('/profile');
       });
     } else {
@@ -119,6 +120,7 @@ app.post("/login", async (req, res) => {
     }
   } catch (error) {
     res.render('pages/login', { error: "Incorrect username or password." });
+    console.log("Incorrect username or password.");
   }
 });
 
