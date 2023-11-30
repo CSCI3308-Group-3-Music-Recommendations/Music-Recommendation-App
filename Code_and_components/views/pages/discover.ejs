@@ -5,6 +5,8 @@
       <h2>Discover Events Based on Your Listening</h2>
       <div class="row">
           <%
+          if (events)
+          {
             for (let event of events){ %>
               <div class="col mb-4 mb-4">
                 <div class="card">
@@ -21,6 +23,7 @@
                 </div>
               </div>
            <% }
+          }
           %>
       </div>
     </div>
