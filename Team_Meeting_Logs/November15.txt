@@ -26,7 +26,7 @@ Olivia: added login and registration page, updated descriptions for user stories
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-MINUTES FROM MEETINGS:
+Minutes for November 30th TA Meeting:
 
 Things we have done (overall):
 - set up database
