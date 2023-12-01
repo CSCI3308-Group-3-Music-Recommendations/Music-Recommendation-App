@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios');
+const { access } = require('fs');
 
 process.on('warning', e => console.warn(e.stack));
 
@@ -69,7 +70,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/discover', (req, res) => {
-  res.render('pages/discover');
+  res.render('pages/discover', {events: []});
 });
 
 app.get('/home', (req, res) => {
@@ -90,6 +91,10 @@ app.get('/topartists', (req, res) => {
 
 app.get('/toprecords', (req, res) => {
   res.render('pages/toprecords');
+});
+
+app.get('/recommendations', (req, res) => {
+  res.render('pages/recommendations', {tracks: []});
 });
 
 app.post("/login", async (req, res) => {
@@ -134,6 +139,19 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  const username = req.body.username;
+  const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+
+    if (find_user) {
+      res.redirect('/register');
+      console.log("Username has already been used.")
+      //#error-message
+      //document.querySelector("#error-message").textContent = "Username has already been taken"; //grabs the empty paragraph from register page
+      return;
+    }
+    //document.querySelector("#error-message").textContent = ""; //empties paragraph 
+    
+    
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
@@ -190,40 +208,39 @@ app.get('/spotifylogin', function(req, res) {
   url += "&response_type=code";
   url += "&redirect_uri=" + redirect_uri;
   url += "&show_dialog=true";
-  url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private";
+  url += "&scope=user-read-private user-read-email user-top-read";
   res.redirect(url); // Show Spotify's authorization screen
 
-  /*
-
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      redirect_uri: redirect_uri
-    }));
-
-    */
 });
 
 app.get('/callback', function(req, res) {
 
   const authConfig = {
     headers: {
-        Authorization: `Basic ${Buffer.from(
-            `${client_id}:${client_secret}`
-        ).toString('base64')}`,
-      }
+      'content-type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+    }
   };
-  
+
+  var inputCode = req.query.code || null;
+
   axios.post(
-      'https://accounts.spotify.com/api/token',
-      'grant_type=client_credentials',
-      authConfig
+      'https://accounts.spotify.com/api/token?',
+      {
+        grant_type: 'authorization_code',
+        code: inputCode,
+        redirect_uri: redirect_uri
+      },
+      authConfig,
   ).then(data => {
+    //console.log(data)
     access_token = data.data.access_token;
     //refresh_token = data.refresh_token;
     //localStorage.setItem('refresh_token',refresh_token);
     spotify_linked = true;
+
+
+
     res.redirect('/toptracks');
   })
   .catch(error => {
@@ -231,8 +248,8 @@ app.get('/callback', function(req, res) {
   })
 });
 
-async function fetchWebApi(endpoint, method, body) {
-  const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+async function getProfile(accessToken) {
+  const response = await fetch('https://api.spotify.com/v1/me', {
     headers: {
       Authorization: 'Bearer ' + accessToken
     }
@@ -243,39 +260,40 @@ async function fetchWebApi(endpoint, method, body) {
 }
 
 
-app.get('/getTopTracks', function(req, res) {
+app.get('/getTopTracks/:time_range', function(req, res) {
+  let time_range = req.params.time_range;
+  let url = `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=10`;
 
   const config = {
     headers: {
         Authorization: `Bearer ${access_token}`,
       }
-  }
-
+  };
 
   axios.get(
-    "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10",
+    url,
     config
     ).then(response => {
       //setTopArtists(response.data.items);
-      console.log(response)
-      topTracks = response.data.items;
-      res.redirect('/toptracks', {tracks: topTracks});
+      topArtists = response.data.items;
+      console.log(topArtists);
       //setTopArtistsActivated(true);
   })
   .catch(error => {
     console.log(error);
   })
+
+  res.redirect('/toptracks');
 });
 
-app.get('/discover', (req, res) => {
-  res.render('pages/discover', {events: []})
-});
 
   app.get('/discoverSearch', async (req, res) => {
-    const query = `SELECT long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
-    const artists = await db.any(query);
-    if (artists)
-    {
+    //const query = `SELECT long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
+    //const artists = await db.any(query);
+    //if (artists)
+    //{
+      const RefEvent = req.query.InputEvent
+      const Location = req.query.Location
       try{
         const response = await axios({
             url: `https://app.ticketmaster.com/discovery/v2/events.json`,
@@ -286,7 +304,9 @@ app.get('/discover', (req, res) => {
             },
             params: {
               apikey: process.env.TICKETMASTER_API_KEY,
-              keyword: artists, //you can choose any artist/event here
+              keyword: RefEvent, //you can choose any artist/event here
+              city: Location,
+              radius: 100,
               size: 20 // you can choose the number of events you would like to return
             },
           })
@@ -297,17 +317,15 @@ app.get('/discover', (req, res) => {
           console.error(error);
           res.render('pages/discover', {events: [] , error: 'failed'})
         }
-    }
-    else
-    {
-      res.render('pages/discover', {events: []});
-    }
+    //}
+    //else
+    //{
+      //res.render('pages/discover', {events: []});
+    //}
   });
   
 
-  app.get('/recommendations', (req, res) => {
-    res.render('pages/recommendations', {tracks: []});
-  });
+
   
   //recommend api
   app.get('/searchSong', async (req, res) => {

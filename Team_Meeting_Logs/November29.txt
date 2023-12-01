@@ -1,0 +1,20 @@
+Minutes for November 29th TA Meeting:
+
+Tyler and Emaueles issues are fixed
+
+Overall: website looks a lot better, you can actually go to the pages now (other than the ones not build), still working on "top __" pages
+
+Olivia:worked login and register page, testing with isabelle, added user acceptance criteria, made and worked on project report and presentation docs
+Next week: work on the testing 
+
+Isabelle: worked on UI (html and css) stuff, redirecting to correct pages when clicking on pages, footer and header
+
+Tyler: reccomendations page (search songs)
+
+Emmanuele: top tracks route, authorization for spotify api
+
+Ali: "top __" pages ejs
+
+Issues: "log into spotify" worked for Ali and Emanuele, not for Tyler
+
+Pending: filling out the rest of the site (top tracks figure out api for that), bands in town part (search ticketmaster api for your top artists)
