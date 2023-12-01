@@ -141,10 +141,10 @@ app.post('/register', async (req, res) => {
       res.redirect('/register');
       console.log("Username has already been used.")
       //#error-message
-      document.querySelector("#error-message").textContent = "Username has already been taken"; //grabs the empty paragraph from register page
+      //document.querySelector("#error-message").textContent = "Username has already been taken"; //grabs the empty paragraph from register page
       return;
     }
-    document.querySelector("#error-message").textContent = ""; //empties paragraph 
+    //document.querySelector("#error-message").textContent = ""; //empties paragraph 
     
     
   // hash the password using bcrypt library
