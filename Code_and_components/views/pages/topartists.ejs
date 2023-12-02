@@ -14,30 +14,42 @@
         <a href="/getTopArtists/long_term" class="nav-link">Lifetime</a>
       </li>
     </ul>
-    </div>
-    
+    <ul class="nav nav-tabs justify-content-center">
+      <li class="nav-item">
+        <a href="/collageArtists/short_term" class="nav-link">Collage</a>
+      </li>
+      <li class="nav-item">
+        <a href="/collageArtists/medium_term" class="nav-link">Collage</a>
+      </li>
+      <li class="nav-item">
+        <a href="/collageArtists/long_term" class="nav-link">Collage</a>
+      </li>
+    </ul>
+  </div>
       <table class="table table-hover">
       <%
         if (artists)
         { %>
           <thead>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Popularity</th>
+            <th class="text-center fs-2" scope="col">#</th>
+            <th class="text-center fs-2" scope="col">Name</th>
+            <th class="text-center fs-2" scope="col">Top Genre</th>
+            <th class="text-center fs-2" scope="col">Image</th>
           </thead>
           <%
           let count = 1;
           for (let artist of artists){ %>
             <tr>
-              <td> <%= count ++ %></td>
-              <td> <%=artist.name %></td>
-              <td> <%=artist.popularity %></td>
+              <td class="text-center fs-5"> <%= count ++ %></td>
+              <td class="text-center fs-5"> <%=artist.name %></td>
+              <td class="text-center fs-5"> <%=artist.genres[0] %></td>
+              <td class="text-center fs-5"> <img src="<%=artist.images[2].url %>" width="150" height="150" alt="artist image"></td>
             </tr>
          <% }
         }
       %>
     </table>
-  </div>
+ 
 </main>
 
 <%- include ('../partials/footer') %>
