@@ -7,10 +7,8 @@ CREATE TABLE users(
 );
 
 CREATE TABLE top_artists(
-    user_id INTEGER,
-    short_term_top_artists VARCHAR(200) ARRAY[10],
-    medium_term_top_artists VARCHAR(200) ARRAY[10],
-    long_term_top_artists VARCHAR(200) ARRAY[10]
+    id INTEGER,
+    artist_name VARCHAR(200) ARRAY[100],
 );
 
 CREATE TABLE top_tracks(

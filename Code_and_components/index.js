@@ -234,7 +234,7 @@ app.get('/callback', function(req, res) {
     //localStorage.setItem('refresh_token',refresh_token);
     spotify_linked = true;
 
-
+    
 
     res.redirect('/toptracks');
   })
@@ -243,7 +243,26 @@ app.get('/callback', function(req, res) {
   })
 });
 
-async function getProfile(accessToken) {
+async function fillTopArtists(accessToken) {
+
+  
+
+  const add_artists = `insert into top_artists (username) values ($1) returning * ;`;
+ 
+  db.task('add-user', task => {
+    return task.batch([task.any(add_user, [req.body.username, hash, req.body.first_name, req.body.last_name])]);
+  })
+  .then(data => {
+    res.redirect('/login');
+  })
+
+  .catch(err => {
+    console.log('Uh Oh spaghettio');
+    console.log(err);
+    res.redirect('/register');
+  });
+
+  
   const response = await fetch('https://api.spotify.com/v1/me', {
     headers: {
       Authorization: 'Bearer ' + accessToken
@@ -281,6 +300,31 @@ app.get('/getTopTracks/:time_range', function(req, res) {
   res.redirect('/toptracks');
 });
 
+app.get('/getTopArtists/:time_range', function(req, res) {
+  let time_range = req.params.time_range;
+  let url = `https://api.spotify.com/v1/me/top/artists?time_range=${time_range}&limit=10`;
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${access_token}`,
+      }
+  };
+
+  axios.get(
+    url,
+    config
+    ).then(response => {
+      //setTopArtists(response.data.items);
+      topArtists = response.data.items;
+      console.log(topArtists);
+      //setTopArtistsActivated(true);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+
+  res.redirect('/toptracks');
+});
 
   app.get('/discoverSearch', async (req, res) => {
     //const query = `SELECT long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
