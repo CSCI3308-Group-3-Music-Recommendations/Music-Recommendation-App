@@ -3,11 +3,42 @@
 
 <main>
   <div class="container">
-    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-    <div class="row">
-        
+    <ul class="nav nav-tabs justify-content-center">
+      <li class="nav-item">
+        <a href="/getTopArtists/short_term" class="nav-link">Last 4 Weeks</a>
+      </li>
+      <li class="nav-item">
+        <a href="/getTopArtists/medium_term" class="nav-link">Last 6 Months</a>
+      </li>
+      <li class="nav-item">
+        <a href="/getTopArtists/long_term" class="nav-link">Lifetime</a>
+      </li>
+    </ul>
     </div>
+    
+      <table class="table table-hover">
+      <%
+        if (artists)
+        { %>
+          <thead>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Popularity</th>
+          </thead>
+          <%
+          let count = 1;
+          for (let artist of artists){ %>
+            <tr>
+              <td> <%= count ++ %></td>
+              <td> <%=artist.name %></td>
+              <td> <%=artist.popularity %></td>
+            </tr>
+         <% }
+        }
+      %>
+    </table>
   </div>
 </main>
 
 <%- include ('../partials/footer') %>
+<script src="Music-Recommendation-App\Code_and_components\index.js"></script>

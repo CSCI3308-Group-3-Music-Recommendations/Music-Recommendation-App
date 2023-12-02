@@ -82,16 +82,13 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/toptracks', (req, res) => {
-  res.render('pages/toptracks');
+  res.render('pages/toptracks', {songs: []});
 });
 
 app.get('/topartists', (req, res) => {
-  res.render('pages/topartists');
+  res.render('pages/topartists', {artists: []});
 });
 
-app.get('/toprecords', (req, res) => {
-  res.render('pages/toprecords');
-});
 
 app.get('/recommendations', (req, res) => {
   res.render('pages/recommendations', {tracks: []});
@@ -134,7 +131,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  
+  const username = req.body.username;
   const find_user = await db.oneOrNone('select * from users where username =  $1', username);
 
     if (find_user) {
@@ -205,7 +202,6 @@ app.get('/spotifylogin', function(req, res) {
   url += "&show_dialog=true";
   url += "&scope=user-read-private user-read-email user-top-read";
   res.redirect(url); // Show Spotify's authorization screen
-
 });
 
 app.get('/callback', function(req, res) {
@@ -276,7 +272,36 @@ async function fillTopArtists(accessToken) {
 
 app.get('/getTopTracks/:time_range', function(req, res) {
   let time_range = req.params.time_range;
-  let url = `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=10`;
+  let url = `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=50`;
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${access_token}`,
+      }
+  };
+
+  axios.get(
+    url,
+    config
+    ).then(response => {
+      //setTopArtists(response.data.items);
+      topTracks = response.data.items;
+      console.log(topTracks);
+      res.render('pages/toptracks', {songs: topTracks})
+      
+      //setTopArtistsActivated(true);
+  })
+  .catch(error => {
+    console.log(error);
+    res.render('pages/toptracks', {songs: []})
+  })
+
+});
+
+
+app.get('/getTopArtists/:time_range', function(req, res) {
+  let time_range = req.params.time_range;
+  let url = `https://api.spotify.com/v1/me/top/artists?time_range=${time_range}&limit=50`;
 
   const config = {
     headers: {
@@ -291,13 +316,15 @@ app.get('/getTopTracks/:time_range', function(req, res) {
       //setTopArtists(response.data.items);
       topArtists = response.data.items;
       console.log(topArtists);
+      res.render('pages/topartists', {artists: topArtists})
+      
       //setTopArtistsActivated(true);
   })
   .catch(error => {
     console.log(error);
+    res.render('pages/topartists', {artists: []})
   })
 
-  res.redirect('/toptracks');
 });
 
 app.get('/getTopArtists/:time_range', function(req, res) {
@@ -325,6 +352,7 @@ app.get('/getTopArtists/:time_range', function(req, res) {
 
   res.redirect('/toptracks');
 });
+
 
   app.get('/discoverSearch', async (req, res) => {
     //const query = `SELECT long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
