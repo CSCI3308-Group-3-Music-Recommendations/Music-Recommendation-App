@@ -3,35 +3,46 @@
 
 <main>
   <div class="container">
-    <a href="/spotifylogin">Log into spotify</a>
-    <a href="/getTopTracks/medium_term">Get Top Tracks</a>
-    <div class="row">
-      <%
-        // Example song data
-        let songs = [{
-          name: "CU Fight Song",
-          album: { name: "Example Album Name" },
-          artists: ["Example Artist"],
-          preview_url: "https://open.spotify.com/track/2eX1VLEpKDWvJgGoz46ywf"
-        }];
-        
-        for (let song of songs){ %>
-          <div class="col mb-4 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title"><%=song.name%></h4>
-                <p class="card-text">
-                    Album: <%=song.album.name%>
-                    <br>
-                    Artist: <%=song.artists[0]%>
-                </p>
-                <a href="<%=song.preview_url %>" class="btn btn-primary"> Listen Now</a>
-              </div>
-            </div>
-          </div>
-       <% }
-      %>
+    <ul class="nav nav-tabs justify-content-center">
+      <li class="nav-item">
+        <a href="/getTopTracks/short_term" class="nav-link">Last 4 Weeks</a>
+      </li>
+      <li class="nav-item">
+        <a href="/getTopTracks/medium_term" class="nav-link">Last 6 Months</a>
+      </li>
+      <li class="nav-item">
+        <a href="/getTopTracks/long_term" class="nav-link">Lifetime</a>
+      </li>
+    </ul>
     </div>
+    
+      <table class="table table-hover">
+      <%
+        if (songs)
+        { %>
+          <thead>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Artist</th>
+            <th scope="col">Popularity</th>
+            <th scope="col"></th>
+          </thead>
+          <%
+          let count = 1;
+          for (let song of songs){ %>
+            <tr>
+              <td> <%= count ++ %></td>
+              <td> <%=song.name %></td>
+              <td> <%=song.artists[0].name %></td>
+              <td> <%=song.popularity %></td>
+              <td>
+                <a href="<%=song.preview_url%>" role="button" class="btn btn-primary">Preview Song</a>
+              </td>
+            </tr>
+         <% }
+        }
+      %>
+    </table>
   </div>
 </main>
 
