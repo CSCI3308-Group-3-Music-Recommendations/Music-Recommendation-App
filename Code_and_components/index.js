@@ -96,6 +96,7 @@ app.get('/recommendations', (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
+    
 
     const username = req.body.username;
     const find_user = await db.oneOrNone('select * from users where username =  $1', username);
@@ -131,16 +132,16 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  const username = req.body.username;
-  const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+  // const username = req.body.username;
+  // const find_user = await db.oneOrNone('select * from users where username =  $1', username);
 
-    if (find_user) {
-      res.redirect('/register');
-      console.log("Username has already been used.")
-      //#error-message
-      //document.querySelector("#error-message").textContent = "Username has already been taken"; //grabs the empty paragraph from register page
-      return;
-    }
+  //   if (find_user) {
+  //     res.redirect('/register');
+  //     console.log("Username has already been used.")
+  //     //#error-message
+  //     //document.querySelector("#error-message").textContent = "Username has already been taken"; //grabs the empty paragraph from register page
+  //     return;
+  //   }
     //document.querySelector("#error-message").textContent = ""; //empties paragraph 
     
     
@@ -151,6 +152,7 @@ app.post('/register', async (req, res) => {
   const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`;
  
   db.task('add-user', task => {
+    console.log(hash);
     return task.batch([task.any(add_user, [req.body.username, hash, req.body.first_name, req.body.last_name])]);
   })
     // if query execution succeeds, redirect to GET /login page

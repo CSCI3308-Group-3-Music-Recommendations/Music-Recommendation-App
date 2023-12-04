@@ -33,7 +33,7 @@ it('positive : /login', done => {
   chai
     .request(server)
     .post('/login')
-    .send({username: 'hhawksley0', password: 'hsiemianowicz0', first_name: 'Harwilll', last_name: 'Eskilstuna'})
+    .send({username: 'hhawksley0', password: 'hsiemianowicz0'})
     .end((err, res) => {
       expect(res).to.have.status(200);
       expect(res.body.status).to.equals('Success');
