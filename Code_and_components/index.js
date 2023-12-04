@@ -96,18 +96,24 @@ app.get('/recommendations', (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
+    const username = req.body.username;
+    const first_name = req.body.first_name;
+    const last_name = req.body.last_name;
+    const find_user = await db.oneOrNone('select * from users where username =  $1', username);
     
 
-    const username = req.body.username;
-    const find_user = await db.oneOrNone('select * from users where username =  $1', username);
-
     if (!find_user) {
+      //res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
       res.redirect('/register');
       return;
     }
-
-    const match = await bcrypt.compare(req.body.password, find_user.password);
-  
+    const match = true;
+    if (!(find_user.first_name == first_name)){
+      match = false;
+    }
+    if (!(find_user.last_name == last_name)){
+      match = false;
+    }
     if (match) {
       user.username = username;
       user.first_name = find_user.first_name;
@@ -132,19 +138,6 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  // const username = req.body.username;
-  // const find_user = await db.oneOrNone('select * from users where username =  $1', username);
-
-  //   if (find_user) {
-  //     res.redirect('/register');
-  //     console.log("Username has already been used.")
-  //     //#error-message
-  //     //document.querySelector("#error-message").textContent = "Username has already been taken"; //grabs the empty paragraph from register page
-  //     return;
-  //   }
-    //document.querySelector("#error-message").textContent = ""; //empties paragraph 
-    
-    
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
@@ -152,7 +145,6 @@ app.post('/register', async (req, res) => {
   const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`;
  
   db.task('add-user', task => {
-    console.log(hash);
     return task.batch([task.any(add_user, [req.body.username, hash, req.body.first_name, req.body.last_name])]);
   })
     // if query execution succeeds, redirect to GET /login page
