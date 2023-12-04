@@ -8,7 +8,7 @@ CREATE TABLE users(
 
 CREATE TABLE top_artists(
     id INTEGER,
-    artist_name VARCHAR(200) ARRAY[100],
+    artist_name VARCHAR(200) ARRAY[100]
 );
 
 CREATE TABLE top_tracks(

@@ -13,8 +13,11 @@
           <input type="text" name="Location" class="form-control" id="Location" />
         </div> 
         <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary" name="discoverButton" value="search">Search</button>
         </div>
+        <div class="mb-4">
+          <button type="submit" class="btn btn-primary" name="discoverButton" value="fill">Fill with your favorite artists</button>
+      </div>
         </form>
         <div class="row">
           <%
@@ -23,13 +26,17 @@
             for (let event of events){ %>
               <div class="col mb-4 mb-4">
                 <div class="card" style="width: 18rem">
+                  <% if(event.images) { %>
                   <img src="<%=event.images[0].url%>" class="card-img-top" alt="Event Image">
+                  <% } %>
                   <div class="card-body">
                     <h4 class="card-title"><%=event.name%></h4>
                     <p class="card-text">
+                      <% if(event.dates) { %>
                         Date: <%=event.dates.start.localDate%>
                         <br>
                         Time: <%=event.dates.start.localTime%>
+                      <% } %>
                     </p>
                     <a href="<%=event.url %>" class="btn btn-primary"> Book Now</a>
                   </div>

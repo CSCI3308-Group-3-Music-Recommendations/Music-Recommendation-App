@@ -131,6 +131,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  /*
   const username = req.body.username;
   const find_user = await db.oneOrNone('select * from users where username =  $1', username);
 
@@ -142,6 +143,7 @@ app.post('/register', async (req, res) => {
       return;
     }
     document.querySelector("#error-message").textContent = ""; //empties paragraph 
+  */
     
     
   // hash the password using bcrypt library
@@ -239,6 +241,7 @@ app.get('/callback', function(req, res) {
   })
 });
 
+/*
 async function fillTopArtists(accessToken) {
 
   let url = `https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50`;
@@ -282,10 +285,9 @@ async function fillTopArtists(accessToken) {
       res.redirect('/register');
     });
   }
-  
-  
 
 }
+*/
 
 
 app.get('/getTopTracks/:time_range', function(req, res) {
@@ -351,37 +353,78 @@ app.get('/getTopArtists/:time_range', function(req, res) {
     //const artists = await db.any(query);
     //if (artists)
     //{
-      const RefEvent = req.query.InputEvent
       const Location = req.query.Location
-      try{
-        const response = await axios({
-            url: `https://app.ticketmaster.com/discovery/v2/events.json`,
-            method: 'GET',
-            dataType: 'json',
-            headers: {
-              'Accept-Encoding': 'application/json',
-            },
-            params: {
-              apikey: process.env.TICKETMASTER_API_KEY,
-              keyword: RefEvent, //you can choose any artist/event here
-              city: Location,
-              radius: 100,
-              size: 20 // you can choose the number of events you would like to return
-            },
-          })
-          const events = response.data._embedded.events;
-          res.render('pages/discover', {events: events})
-        }
-        catch(error){
-          console.error(error);
-          res.render('pages/discover', {events: [] , error: 'failed'})
-        }
-    //}
-    //else
-    //{
-      //res.render('pages/discover', {events: []});
-    //}
+
+      if(req.query.discoverButton == "search") {
+        const RefEvent = req.query.InputEvent
+        events = await discoverEvents(Location, RefEvent)
+        res.render('pages/discover', {events: events});
+      } else if(req.query.discoverButton == "fill") {
+        let url = `https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50`;
+
+        const config = {
+          headers: {
+              Authorization: `Bearer ${access_token}`,
+            }
+        };
+
+        axios.get(
+          url,
+          config
+          ).then(async response => {
+            topArtists = response.data.items;
+            
+            let events = new Array();
+            let artist;
+            let event;
+            for(let index in topArtists) {
+              artist = topArtists[index].name
+              event = await discoverEvents(Location,artist);
+              if(event === undefined) {
+                
+              }
+              else {
+                events.push(event);
+              }
+            };
+            //console.log(events);
+            res.render('pages/discover', {events: events});
+            
+        })
+      }
+      
   });
+
+  async function discoverEvents(Location, RefEvent) {
+    try{
+      const response = await axios({
+          url: `https://app.ticketmaster.com/discovery/v2/events.json`,
+          method: 'GET',
+          dataType: 'json',
+          headers: {
+            'Accept-Encoding': 'application/json',
+          },
+          params: {
+            apikey: process.env.TICKETMASTER_API_KEY,
+            keyword: RefEvent, //you can choose any artist/event here
+            city: Location,
+            radius: 100,
+            size: 20 // you can choose the number of events you would like to return
+          },
+        })
+        if(response.data._embedded === undefined) {
+          return undefined;
+        }
+        else {
+          return response.data._embedded.events;
+        }
+        
+      }
+      catch(error){
+        console.error(error);
+        //res.render('pages/discover', {events: [] , error: 'failed'})
+      }
+  }
   
 
 
