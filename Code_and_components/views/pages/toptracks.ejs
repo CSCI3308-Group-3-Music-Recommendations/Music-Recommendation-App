@@ -14,28 +14,39 @@
         <a href="/getTopTracks/long_term" class="nav-link">Lifetime</a>
       </li>
     </ul>
-    </div>
+    <ul class="nav nav-tabs justify-content-center">
+      <li class="nav-item">
+        <a href="/collageTracks/short_term" class="nav-link">Collage</a>
+      </li>
+      <li class="nav-item">
+        <a href="/collageTracks/medium_term" class="nav-link">Collage</a>
+      </li>
+      <li class="nav-item">
+        <a href="/collageTracks/long_term" class="nav-link">Collage</a>
+      </li>
+    </ul>
+  </div>
     
       <table class="table table-hover">
       <%
         if (songs)
         { %>
           <thead>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Artist</th>
-            <th scope="col">Popularity</th>
-            <th scope="col"></th>
+            <th class="text-center fs-2" scope="col">#</th>
+            <th class="text-center fs-2" scope="col">Name</th>
+            <th class="text-center fs-2" scope="col">Artist</th>
+            <th class="text-center fs-2" scope="col">Image</th>
+            <th class="text-center fs-2" scope="col">Preview</th>
           </thead>
           <%
           let count = 1;
           for (let song of songs){ %>
             <tr>
-              <td> <%= count ++ %></td>
-              <td> <%=song.name %></td>
-              <td> <%=song.artists[0].name %></td>
-              <td> <%=song.popularity %></td>
-              <td>
+              <td class="text-center fs-5"> <%= count ++ %></td>
+              <td class="text-center fs-5"> <%=song.name %></td>
+              <td class="text-center fs-5"> <%=song.artists[0].name %></td>
+              <td class="text-center fs-5"> <img src="<%=song.album.images[1].url%>" height="150" width="150" alt="album image"></td>
+              <td class="text-center fs-5">
                 <a href="<%=song.preview_url%>" role="button" class="btn btn-primary">Preview Song</a>
               </td>
             </tr>

@@ -304,7 +304,7 @@ app.get('/getTopTracks/:time_range', function(req, res) {
     ).then(response => {
       //setTopArtists(response.data.items);
       topTracks = response.data.items;
-      console.log(topTracks);
+      console.log(topTracks[0].album.images);
       res.render('pages/toptracks', {songs: topTracks})
       
       //setTopArtistsActivated(true);
@@ -415,6 +415,64 @@ app.post('/displayResults', async (req, res) => {
       res.render('pages/recResults', {tracks: [],error: 'failed'})
     }
     
+});
+
+//collage API
+
+app.get('/collageTracks/:time_range', function(req, res) {
+  let time_range = req.params.time_range;
+  let url = `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=50`;
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${access_token}`,
+      }
+  };
+
+  axios.get(
+    url,
+    config
+    ).then(response => {
+      //setTopArtists(response.data.items);
+      topTracks = response.data.items;
+      console.log(topTracks[0].album.images);
+      res.render('pages/collageTracks', {tracks: topTracks})
+      
+      //setTopArtistsActivated(true);
+  })
+  .catch(error => {
+    console.log(error);
+    res.render('pages/collageTracks', {tracks: []})
+  })
+
+});
+
+app.get('/collageArtists/:time_range', function(req, res) {
+  let time_range = req.params.time_range;
+  let url = `https://api.spotify.com/v1/me/top/artists?time_range=${time_range}&limit=50`;
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${access_token}`,
+      }
+  };
+
+  axios.get(
+    url,
+    config
+    ).then(response => {
+      //setTopArtists(response.data.items);
+      topArtists = response.data.items;
+      console.log(topArtists[0].images);
+      res.render('pages/collageArtists', {artists: topArtists})
+      
+      //setTopArtistsActivated(true);
+  })
+  .catch(error => {
+    console.log(error);
+    res.render('pages/collageArtists', {artists: []})
+  })
+
 });
 
 
