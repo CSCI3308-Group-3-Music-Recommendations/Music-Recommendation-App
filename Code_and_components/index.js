@@ -5,7 +5,8 @@ const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcryptjs'); //  To hash passwords
-//const axios = require('axios');
+const axios = require('axios');
+const { access } = require('fs');
 
 process.on('warning', e => console.warn(e.stack));
 
@@ -69,7 +70,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/discover', (req, res) => {
-  res.render('pages/discover');
+  res.render('pages/discover', {events: []});
 });
 
 app.get('/home', (req, res) => {
@@ -90,6 +91,10 @@ app.get('/topartists', (req, res) => {
 
 app.get('/toprecords', (req, res) => {
   res.render('pages/toprecords');
+});
+
+app.get('/recommendations', (req, res) => {
+  res.render('pages/recommendations', {tracks: []});
 });
 
 app.post("/login", async (req, res) => {
@@ -134,6 +139,20 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  const username = req.body.username;
+  const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+
+    if (find_user) {
+      res.redirect('/register');
+      console.log("Username has already been used.")
+      //#error-message
+      const test = document.querySelector("#error-message");
+      test.textContent = "Username has already been taken"; //grabs the empty paragraph from register page
+      return;
+    }
+    //document.querySelector("#error-message").textContent = ""; //empties paragraph 
+    
+    
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
@@ -176,127 +195,170 @@ app.get('/logout', (req, res) => {
 });
 
 var client_id = 'a8a051d3f78f420295c99fdc4d712ede';
-var client_secret = 'e950fb4f69654075b05305d7aa871043'
+var client_secret = 'e950fb4f69654075b05305d7aa871043';
 var redirect_uri = 'http://localhost:3000/callback';
 var spotify_linked = false;
+var access_token;
+
+const AUTHORIZE = "https://accounts.spotify.com/authorize"
 
 app.get('/spotifylogin', function(req, res) {
 
-  console.log("in login")
+  let url = AUTHORIZE;
+  url += "?client_id=" + client_id;
+  url += "&response_type=code";
+  url += "&redirect_uri=" + redirect_uri;
+  url += "&show_dialog=true";
+  url += "&scope=user-read-private user-read-email user-top-read";
+  res.redirect(url); // Show Spotify's authorization screen
 
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      redirect_uri: redirect_uri
-    }));
 });
 
 app.get('/callback', function(req, res) {
 
-  var code = req.query.code || null;
-
-  var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      code: code,
-      redirect_uri: redirect_uri,
-      grant_type: 'authorization_code'
-    },
+  const authConfig = {
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
-    },
-    json: true
+    }
   };
-  
-  axios(authOptions).then(data => {
-    access_token = data.access_token;
-    localStorage.setItem('access_token',access_token);
-    refresh_token = data.refresh_token;
-    localStorage.setItem('refresh_token',refresh_token);
+
+  var inputCode = req.query.code || null;
+
+  axios.post(
+      'https://accounts.spotify.com/api/token?',
+      {
+        grant_type: 'authorization_code',
+        code: inputCode,
+        redirect_uri: redirect_uri
+      },
+      authConfig,
+  ).then(data => {
+    //console.log(data)
+    access_token = data.data.access_token;
+    //refresh_token = data.refresh_token;
+    //localStorage.setItem('refresh_token',refresh_token);
     spotify_linked = true;
-    console.log(access_token);
+
+
+
+    res.redirect('/toptracks');
   })
   .catch(error => {
     console.log(error);
   })
 });
 
-app.get('/refresh_token', function(req, res) {
-
-  var refresh_token = req.query.refresh_token;
-  var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
+async function getProfile(accessToken) {
+  const response = await fetch('https://api.spotify.com/v1/me', {
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
-    },
-    form: {
-      grant_type: 'refresh_token',
-      refresh_token: refresh_token
-    },
-    json: true
+      Authorization: 'Bearer ' + accessToken
+    }
+  });
+
+  const data = await response.json();
+  console.log(data);
+}
+
+
+app.get('/getTopTracks/:time_range', function(req, res) {
+  let time_range = req.params.time_range;
+  let url = `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=10`;
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${access_token}`,
+      }
   };
 
-  request.post(authOptions, function(error, response, body) {
-    if (!error && response.statusCode === 200) {
-      var access_token = body.access_token,
-          refresh_token = body.refresh_token;
-      res.send({
-        'access_token': access_token,
-        'refresh_token': refresh_token
-      });
-    }
-  });
+  axios.get(
+    url,
+    config
+    ).then(response => {
+      //setTopArtists(response.data.items);
+      topArtists = response.data.items;
+      console.log(topArtists);
+      //setTopArtistsActivated(true);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+
+  res.redirect('/toptracks');
 });
 
-async function fetchWebApi(endpoint, method, body) {
-  const res = await fetch(`https://api.spotify.com/${endpoint}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-    },
-    method,
-    body:JSON.stringify(body)
+
+  app.get('/discoverSearch', async (req, res) => {
+    //const query = `SELECT long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
+    //const artists = await db.any(query);
+    //if (artists)
+    //{
+      const RefEvent = req.query.InputEvent
+      const Location = req.query.Location
+      try{
+        const response = await axios({
+            url: `https://app.ticketmaster.com/discovery/v2/events.json`,
+            method: 'GET',
+            dataType: 'json',
+            headers: {
+              'Accept-Encoding': 'application/json',
+            },
+            params: {
+              apikey: process.env.TICKETMASTER_API_KEY,
+              keyword: RefEvent, //you can choose any artist/event here
+              city: Location,
+              radius: 100,
+              size: 20 // you can choose the number of events you would like to return
+            },
+          })
+          const events = response.data._embedded.events;
+          res.render('pages/discover', {events: events})
+        }
+        catch(error){
+          console.error(error);
+          res.render('pages/discover', {events: [] , error: 'failed'})
+        }
+    //}
+    //else
+    //{
+      //res.render('pages/discover', {events: []});
+    //}
   });
-  return await res.json();
-};
-
-async function getTopTracks(){
-  return (await fetchWebApi(
-    'v1/me/top/tracks?time_range=short_term&limit=10', 'GET'
-  )).items;
-};
+  
 
 
-app.get('/discover', async (req, res) => {
-  const ticketmaster_api_key = "kUFeqGhN5NHBhB8Fafpu2jpS2gWPURt9"
-  const query = `SELECT short_term_top_artists, medium_term_top_artists, long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
-  const artists = await db.any(query);
-
-  try{
-    const response = await axios({
-        url: `https://app.ticketmaster.com/discovery/v2/events.json`,
-        method: 'GET',
-        dataType: 'json',
-        headers: {
-          'Accept-Encoding': 'application/json',
-        },
-        params: {
-          apikey: ticketmaster_api_key,
-          keyword: artists, //you can choose any artist/event here
-          size: 20 // you can choose the number of events you would like to return
-        },
-      })
-      const events = response.data._embedded.events;
-      res.render('pages/discover', {events: events})
+  
+  //recommend api
+  app.get('/searchSong', async (req, res) => {
+    let input_song = req.query.InputSong
+    let searchUrl = `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${input_song}&api_key=${process.env.LAST_FM_API_KEY}&format=json`
+    try{
+      const response = await axios({url: searchUrl})
+      const searchResults = response.data.results.trackmatches.track   
+      res.render('pages/recommendations', {tracks: searchResults})
     }
     catch(error){
-      console.error(err);
-      res.render('pages/discover', {events: {} , error: 'failed'})
+      console.error(error);
+      res.render('pages/recommendations', {tracks: [],error: 'failed'})
     }
-  
+  });
+
+app.post('/displayResults', async (req, res) => {
+    let track = req.body.trackName
+    let artist = req.body.trackArtist
+    const url = `http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=${artist}&track=${track}&api_key=${process.env.LAST_FM_API_KEY}&format=json`
+    try{
+       const response = await axios({url: url})
+       const searchResults = response.data.similartracks.track   
+       res.render('pages/recResults', {tracks: searchResults})
+    }
+    catch(error){
+      console.error(error);
+      res.render('pages/recResults', {tracks: [],error: 'failed'})
+    }
+    
 });
+
 
 // ---------------------------------------------------------------------------------------------------------
 // Authentication Middleware.
@@ -308,6 +370,6 @@ const auth = (req, res, next) => {
   next();
 };
 
-app.use(auth)
+app.use(auth);
 
 module.exports = app.listen(3000);

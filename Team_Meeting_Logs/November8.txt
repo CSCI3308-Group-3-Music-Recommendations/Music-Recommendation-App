@@ -1,3 +1,6 @@
+Minutes for November 8th TA Meeting:
+
+
 Decisions made:
 should start working on code and creating the features
 Features we want to include:
