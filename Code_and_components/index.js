@@ -123,7 +123,7 @@ app.post("/login", async (req, res) => {
       req.session.user = user;
       req.session.save(() => {
         console.log("Logging in...");
-        res.redirect('/profile');
+        res.redirect('/home');
       });
     } else {
       res.redirect('/loginFail');
@@ -158,7 +158,7 @@ app.post("/loginFail", async (req, res) => {
       req.session.user = user;
       req.session.save(() => {
         console.log("Logging in...");
-        res.redirect('/profile');
+        res.redirect('/home');
       });
     } else {
       res.redirect('/loginFail');
