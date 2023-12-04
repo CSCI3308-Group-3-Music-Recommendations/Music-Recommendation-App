@@ -97,6 +97,10 @@ app.get('/recommendations', (req, res) => {
   res.render('pages/recommendations', {tracks: []});
 });
 
+app.get('/registerFail', (req, res) => {
+  res.render('pages/registerFail', {tracks: []});
+});
+
 app.post("/login", async (req, res) => {
   try {
 
@@ -136,18 +140,47 @@ app.get('/register', (req, res) => {
 app.post('/register', async (req, res) => {
   const username = req.body.username;
   const find_user = await db.oneOrNone('select * from users where username =  $1', username);
-
+  
     if (find_user) {
-      res.redirect('/register');
-      console.log("Username has already been used.")
-      //#error-message
-      const test = document.querySelector("#error-message");
-      test.textContent = "Username has already been taken"; //grabs the empty paragraph from register page
+      res.redirect('/registerFail');
+      console.log("Username has already been used.")    
       return;
-    }
-    //document.querySelector("#error-message").textContent = ""; //empties paragraph 
-    
-    
+    }    
+  // hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
+
+  //To-Do: Insert username and hashed password into 'users' table
+  const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`;
+ 
+  db.task('add-user', task => {
+    return task.batch([task.any(add_user, [req.body.username, hash, req.body.first_name, req.body.last_name])]);
+  })
+    // if query execution succeeds, redirect to GET /login page
+    // if query execution fails, redirect to GET /register route
+    .then(data => {
+      //res.status(200).json({status: 'Success', message: 'User successfully registered.'});
+      res.redirect('/login');
+    })
+    // if query execution fails
+    // send error message
+    .catch(err => {
+      //res.status(200).json({status: 'Failure', message: 'Issues registering user.'});
+      console.log('Uh Oh spaghettio');
+      console.log(err);
+      res.redirect('/register');
+    });
+});
+
+//same code as app.post for /register
+app.post('/registerFail', async (req, res) => {
+  const username = req.body.username;
+  const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+  
+    if (find_user) {
+      res.redirect('/registerFail');
+      console.log("Username has already been used.")    
+      return;
+    }    
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
@@ -183,7 +216,7 @@ app.get('/profile', (req, res) => {
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.render("pages/login");
+  //res.render("pages/login");
   res.render("pages/login", {
     message: `Logged out successfully.`,
   });
