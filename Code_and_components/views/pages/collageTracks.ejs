@@ -1,0 +1,22 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+<main>
+        <div class="row">
+          <%
+          if (tracks)
+          {
+            for (let track of tracks){ %>
+              <div class="col m-0 p-0">
+                <div class="card" style="width: 20rem">
+                  <img src="<%=track.album.images[0].url%>" class="card-img-top" alt="Event Image">
+                </div>
+              </div>
+           <% }
+          }
+          %>
+        </div>
+</main>
+  
+
+<%- include ('../partials/footer') %>
