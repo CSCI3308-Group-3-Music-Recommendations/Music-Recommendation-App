@@ -139,7 +139,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  const username = req.body.username;
+  /*const username = req.body.username;
   const find_user = await db.oneOrNone('select * from users where username =  $1', username);
 
     if (find_user) {
@@ -151,7 +151,7 @@ app.post('/register', async (req, res) => {
       return;
     }
     //document.querySelector("#error-message").textContent = ""; //empties paragraph 
-    
+    */
     
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
