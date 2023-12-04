@@ -230,9 +230,9 @@ app.get('/callback', function(req, res) {
     //localStorage.setItem('refresh_token',refresh_token);
     spotify_linked = true;
 
-    
+    //fillTopArtists(access_token);
 
-    res.redirect('/toptracks');
+    res.redirect('/home');
   })
   .catch(error => {
     console.log(error);
@@ -241,32 +241,50 @@ app.get('/callback', function(req, res) {
 
 async function fillTopArtists(accessToken) {
 
-  
+  let url = `https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50`;
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+  };
+
+  let topArtists;
+
+  axios.get(
+    url,
+    config
+    ).then(response => {
+      console.log(response);
+      //setTopArtists(response.data.items);
+      topArtists = response.data.items;
+      //console.log(topArtists);
+      
+      //setTopArtistsActivated(true);
+  })
+  .catch(error => {
+    console.log(error);
+  })
 
   const add_artists = `insert into top_artists (username) values ($1) returning * ;`;
- 
-  db.task('add-user', task => {
-    return task.batch([task.any(add_user, [req.body.username, hash, req.body.first_name, req.body.last_name])]);
-  })
-  .then(data => {
-    res.redirect('/login');
-  })
 
-  .catch(err => {
-    console.log('Uh Oh spaghettio');
-    console.log(err);
-    res.redirect('/register');
-  });
-
+  for (let artist of topArtists) {
+    db.task('add-artists', task => {
+      task.batch([task.any(add_artists, [artist.name])]);
+    })
+    .then(data => {
+      res.redirect('/home');
+    })
   
-  const response = await fetch('https://api.spotify.com/v1/me', {
-    headers: {
-      Authorization: 'Bearer ' + accessToken
-    }
-  });
+    .catch(err => {
+      console.log('Uh Oh spaghettio');
+      console.log(err);
+      res.redirect('/register');
+    });
+  }
+  
+  
 
-  const data = await response.json();
-  console.log(data);
 }
 
 
@@ -315,7 +333,7 @@ app.get('/getTopArtists/:time_range', function(req, res) {
     ).then(response => {
       //setTopArtists(response.data.items);
       topArtists = response.data.items;
-      console.log(topArtists);
+      //console.log(topArtists);
       res.render('pages/topartists', {artists: topArtists})
       
       //setTopArtistsActivated(true);
@@ -325,32 +343,6 @@ app.get('/getTopArtists/:time_range', function(req, res) {
     res.render('pages/topartists', {artists: []})
   })
 
-});
-
-app.get('/getTopArtists/:time_range', function(req, res) {
-  let time_range = req.params.time_range;
-  let url = `https://api.spotify.com/v1/me/top/artists?time_range=${time_range}&limit=10`;
-
-  const config = {
-    headers: {
-        Authorization: `Bearer ${access_token}`,
-      }
-  };
-
-  axios.get(
-    url,
-    config
-    ).then(response => {
-      //setTopArtists(response.data.items);
-      topArtists = response.data.items;
-      console.log(topArtists);
-      //setTopArtistsActivated(true);
-  })
-  .catch(error => {
-    console.log(error);
-  })
-
-  res.redirect('/toptracks');
 });
 
 
