@@ -98,6 +98,10 @@ app.get('/registerFail', (req, res) => {
   res.render('pages/registerFail', {tracks: []});
 });
 
+app.get('/loginFail', (req, res) => {
+  res.render('pages/loginFail', {tracks: []});
+});
+
 app.post("/login", async (req, res) => {
   try {
 
@@ -122,7 +126,44 @@ app.post("/login", async (req, res) => {
         res.redirect('/profile');
       });
     } else {
-      throw new Error("Incorrect username or password.");
+      res.redirect('/loginFail');
+      //throw new Error("Incorrect username or password.");
+      
+    }
+  } catch (error) {
+    res.render('pages/login', { error: "Incorrect username or password." });
+    console.log("Incorrect username or password.");
+  }
+});
+
+//same code as /login app.post
+app.post("/loginFail", async (req, res) => {
+  try {
+
+    const username = req.body.username;
+    const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+
+    if (!find_user) {
+      res.redirect('/register');
+      return;
+    }
+
+    const match = await bcrypt.compare(req.body.password, find_user.password);
+  
+    if (match) {
+      user.username = username;
+      user.first_name = find_user.first_name;
+      user.last_name = find_user.last_name;
+
+      req.session.user = user;
+      req.session.save(() => {
+        console.log("Logging in...");
+        res.redirect('/profile');
+      });
+    } else {
+      res.redirect('/loginFail');
+      //throw new Error("Incorrect username or password.");
+      
     }
   } catch (error) {
     res.render('pages/login', { error: "Incorrect username or password." });
