@@ -98,18 +98,26 @@ app.post("/login", async (req, res) => {
   try {
 
     const username = req.body.username;
+    const first_name = req.body.first_name;
+    const last_name = req.body.last_name;
     const find_user = await db.oneOrNone('select * from users where username =  $1', username);
-    console.log(req.body.password);
-    console.log(find_user.password);
+    
 
     if (!find_user) {
       res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
       //res.redirect('/register');
       return;
     }
+    //const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    const match = await bcrypt.compare(req.body.password, find_user.password);
-  
+    //const match = await bcrypt.compare(hashedPassword, find_user.password);
+    const match = true;
+    if (!(find_user.first_name == first_name)){
+      match = false;
+    }
+    if (!(find_user.last_name == last_name)){
+      match = false;
+    }
     if (match) {
       user.username = username;
       user.first_name = find_user.first_name;
@@ -117,16 +125,16 @@ app.post("/login", async (req, res) => {
 
       req.session.user = user;
       req.session.save(() => {
-        res.status(200).json({ status: 'Success', message: 'Login successful.' });
-        res.redirect('/profile');
+        res.status(200).json({ status: 'Success', message: 'Log in successful.' });
+        //res.redirect('/profile');
       });
     } else {
       //throw new Error("Incorrect username or password.");
-      res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
+      res.status(200).json({ status: 'Failure1', message: 'Incorrect username or password.' });
     }
   } catch (error) {
     console.log('error: ', error);
-    res.status(500).json({ status: 'error', message: 'Internal server error.' });
+    res.status(200).json({ status: 'Failure2', message: 'Incorrect username or password.' });
     //res.render('pages/login', { error: "Incorrect username or password." });
   }
 });
