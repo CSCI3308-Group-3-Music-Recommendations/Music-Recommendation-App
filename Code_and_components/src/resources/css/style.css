@@ -14,3 +14,11 @@ main{
     flex: 1;
     margin-bottom: 100px;
 }
+
+#message{
+    background-color: #ffa7a7;
+    color: #d61e1e;
+    text-align: center;
+    padding: 5px;
+    font-weight: bold;
+}
