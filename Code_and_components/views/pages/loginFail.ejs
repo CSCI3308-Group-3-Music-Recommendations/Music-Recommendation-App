@@ -1,0 +1,27 @@
+<%- include ('../partials/header') %>
+
+<main>
+  <div class="container">
+    <h1 class="horizontal-center display-5" style="padding-top: 30px; padding-bottom: 30px;">Login</h1>
+    <p id="idk">Looks like your passwords don't match, try again!</p>
+
+    <div class="horizontal-center">
+      <form action="/login" method="POST">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input type="text" class="form-control" id="username" name="username"/>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input type="password" class="form-control" id="password" name="password"/>
+        </div>
+        <div class="mb-3">
+          <p>If you do not have an account, register <a href="/register">here</a>.</p>
+        </div>
+          <button type="submit" class="btn btn-primary" value="Login">Login</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>

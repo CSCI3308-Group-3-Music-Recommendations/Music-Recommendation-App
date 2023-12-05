@@ -3,13 +3,14 @@
 
 <main>
     <div class="container">
-      <h2>Discover Events Based on Your Listening</h2>
+      <h1 class="text-center">Discover Events Based on Your Listening</h1>
+      <p class="text-center text-wrap fs-4">Select search to find specific events or enter a location and press fill with your favorite artists to discover events based on your listening</p>
       <form action="/discoverSearch" method="get">
         <div class="mb-4">
-          <label class="form-label" for="InputEvent">Type here to serach for events</label>
+          <label class="form-label text-center" for="InputEvent">Type here to search for events</label>
           <input type="text" name="InputEvent" class="form-control" id="InputEvent" />
         
-          <label class="form-label" for="Location">Enter the city you are in</label>
+          <label class="form-label text-center" for="Location">Enter the city you are in</label>
           <input type="text" name="Location" class="form-control" id="Location" />
         </div> 
         <div class="mb-3">
@@ -25,7 +26,7 @@
           {
             for (let event of events){ %>
               <div class="col mb-4 mb-4">
-                <div class="card" style="width: 18rem">
+                <div class="card" style="width: 20rem">
                   <% if(event.images) { %>
                   <img src="<%=event.images[0].url%>" class="card-img-top" alt="Event Image">
                   <% } %>

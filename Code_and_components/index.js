@@ -360,7 +360,7 @@ app.get('/getTopArtists/:time_range', function(req, res) {
         events = await discoverEvents(Location, RefEvent)
         res.render('pages/discover', {events: events});
       } else if(req.query.discoverButton == "fill") {
-        let url = `https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50`;
+        let url = `https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=20`;
 
         const config = {
           headers: {
@@ -374,17 +374,14 @@ app.get('/getTopArtists/:time_range', function(req, res) {
           ).then(async response => {
             topArtists = response.data.items;
             
-            let events = new Array();
+            let events = [];
             let artist;
             let event;
             for(let index in topArtists) {
               artist = topArtists[index].name
               event = await discoverEvents(Location,artist);
-              if(event === undefined) {
-                
-              }
-              else {
-                events.push(event);
+              if(event) {
+                events = events.concat(event);
               }
             };
             //console.log(events);
@@ -409,20 +406,16 @@ app.get('/getTopArtists/:time_range', function(req, res) {
             keyword: RefEvent, //you can choose any artist/event here
             city: Location,
             radius: 100,
-            size: 20 // you can choose the number of events you would like to return
+            size: 2 // you can choose the number of events you would like to return
           },
         })
-        if(response.data._embedded === undefined) {
-          return undefined;
-        }
-        else {
+        console.log(response.data._embedded);
+        if (response.data._embedded.events){
           return response.data._embedded.events;
         }
-        
       }
       catch(error){
         console.error(error);
-        //res.render('pages/discover', {events: [] , error: 'failed'})
       }
   }
   
