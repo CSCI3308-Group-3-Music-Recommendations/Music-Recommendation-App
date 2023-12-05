@@ -3,36 +3,59 @@
 
 <main>
   <div class="container">
-    <a href="/spotifylogin">Log into spotify</a>
-    <a href="/getTopTracks">Get Top Tracks</a>
-    <div class="row">
+    <h1 class="text-center">Your Top Tracks</h1>
+    <br>
+    <ul class="nav nav-tabs justify-content-center">
+      <li class="nav-item">
+        <a href="/getTopTracks/short_term" class="nav-link">Last 4 Weeks</a>
+      </li>
+      <li class="nav-item">
+        <a href="/getTopTracks/medium_term" class="nav-link">Last 6 Months</a>
+      </li>
+      <li class="nav-item">
+        <a href="/getTopTracks/long_term" class="nav-link">Lifetime</a>
+      </li>
+    </ul>
+    <ul class="nav nav-tabs justify-content-center">
+      <li class="nav-item">
+        <a href="/collageTracks/short_term" class="nav-link">Collage</a>
+      </li>
+      <li class="nav-item">
+        <a href="/collageTracks/medium_term" class="nav-link">Collage</a>
+      </li>
+      <li class="nav-item">
+        <a href="/collageTracks/long_term" class="nav-link">Collage</a>
+      </li>
+    </ul>
+  </div>
+    
+      <table class="table table-hover">
       <%
-        // Example song data
-        let songs = [{
-          name: "CU Fight Song",
-          album: { name: "Example Album Name" },
-          artists: ["Example Artist"],
-          preview_url: "https://open.spotify.com/track/2eX1VLEpKDWvJgGoz46ywf"
-        }];
-        
-
-        for (let song of songs){ %>
-          <div class="col mb-4 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title"><%=song.name%></h4>
-                <p class="card-text">
-                    Album: <%=song.album.name%>
-                    <br>
-                    Artist: <%=song.artists[0]%>
-                </p>
-                <a href="<%=song.preview_url %>" class="btn btn-primary"> Listen Now</a>
-              </div>
-            </div>
-          </div>
-       <% }
+        if (songs)
+        { %>
+          <thead>
+            <th class="text-center fs-2" scope="col">#</th>
+            <th class="text-center fs-2" scope="col">Name</th>
+            <th class="text-center fs-2" scope="col">Artist</th>
+            <th class="text-center fs-2" scope="col">Image</th>
+            <th class="text-center fs-2" scope="col">Preview</th>
+          </thead>
+          <%
+          let count = 1;
+          for (let song of songs){ %>
+            <tr>
+              <td class="text-center fs-5"> <%= count ++ %></td>
+              <td class="text-center fs-5"> <%=song.name %></td>
+              <td class="text-center fs-5"> <%=song.artists[0].name %></td>
+              <td class="text-center fs-5"> <img src="<%=song.album.images[1].url%>" height="150" width="150" alt="album image"></td>
+              <td class="text-center fs-5">
+                <a href="<%=song.preview_url%>" role="button" class="btn btn-primary">Preview Song</a>
+              </td>
+            </tr>
+         <% }
+        }
       %>
-    </div>
+    </table>
   </div>
 </main>
 

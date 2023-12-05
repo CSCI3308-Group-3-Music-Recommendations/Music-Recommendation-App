@@ -1,0 +1,22 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+<main>
+        <div class="row">
+          <%
+          if (artists)
+          {
+            for (let artist of artists){ %>
+              <div class="col m-0 p-0">
+                <div class="card" style="width: 20rem">
+                  <img src="<%=artist.images[0].url%>" height="320" width="320"  class="card-img-top" alt="Event Image">
+                </div>
+              </div>
+           <% }
+          }
+          %>
+        </div>
+</main>
+  
+
+<%- include ('../partials/footer') %>
