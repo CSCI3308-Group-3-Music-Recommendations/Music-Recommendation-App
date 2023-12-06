@@ -30,7 +30,7 @@ body {
     transition: 0.3s;
 }
 
-.shadow {
+.homepage {
     background: rgb(254,230,252);
     background: radial-gradient(circle, rgba(254,230,252,1) 0%, rgba(240,233,251,1) 100%);
     border-radius: 5px;
@@ -199,37 +199,6 @@ a.contact:hover {
     text-decoration: none;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
-}
-
-th, td {
-    padding: 10px;
-    text-align: left;
-}
-
-tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-tr:hover {
-    background-color: #ddd;
-}
-
-@font-face {
-    font-family: "Spotify Circular";
-    src: url('/Gotham-Spotify-Font/GothamMedium.ttf');
-}
-
-.spotify-font{
-    font-family: 'Spotify Circular', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
 .profile-page {
     margin: 0;
     position: absolute;
@@ -237,4 +206,25 @@ tr:hover {
     transform: translateY(-50%);
     background: rgb(238,174,202);
     background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.card-body {
+    background-color: #00004d;
+    color: white;
+    border-radius: 10px;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6), 0 6px 20px 0 rgba(0, 0, 0, 0.54);
+    color: lightgray;
+    text-decoration: none;
+}
+
+.card-title {
+    text-decoration: none;
+    color: white;
 }
