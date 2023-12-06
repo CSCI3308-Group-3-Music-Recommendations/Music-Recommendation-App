@@ -1,56 +1,42 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
+<%- include ('../partials/menu2') %>
 
 <main>
   <div class="container mt-5 mb-4">
     <div class="text-center mb-4">
       <h1 class="display-4">Welcome to BeatBuddy!</h1>
       <p class="lead">Your Personalized Music Journey Awaits</p>
-    </div>
 
-    <div class="row justify-content-center">
-      <div class="col-md-10">
-        <div class="card mb-3">
-          <div class="card-body text-center">
-            <a href="/toptracks"><h2 class="card-title">Explore Your Top Tracks</h2></a> 
+      <div class="shadow" style="font-weight: 300; font-size: 17px;">
+        <p>With BeatBuddy you can...</p>
+        <ul>
+          <li>
             <p>Rediscover old favorites and find new tunes tailored to your taste, all based on your Spotify listening history.</p>
-          </div>
-        </div>
-
-        <div class="card mb-3">
-          <div class="card-body text-center">
-            <a href="/discover"><h2 class="card-title">Find Concerts Nearby</h2></a> 
+          </li>
+          <li>
             <p>Stay updated on live music events and concerts in your area that match your musical preferences.</p>
-          </div>
-        </div>
-
-        <div class="card mb-3">
-          <div class="card-body text-center">
-            <a href="/topartists"><h2 class="card-title">Discover Your Top Artists</h2></a>
+          </li>
+          <li>
             <p>Delve into the world of your favorite musicians and keep up with their latest releases and discographies.</p>
-          </div>
-        </div>
-
-        <div class="card mb-3">
-          <div class="card-body text-center">
-            <a href="/recommendations"><h2 class="card-title">Receive Recommendations</h2></a>
+          </li>
+          <li>
             <p>Simply search any song of your choosing and uncover a world of similar music.</p>
-          </div>
-        </div>
-
-        <div class="card mb-3">
-          <div class="card-body text-center">
-            <h2 class="card-title">Connect and Share</h2>
+          </li>
+          <li>
             <p>Share your music discoveries and concert plans with friends, enhancing your social music experience.</p>
-          </div>
-        </div>
-
-        <div class="my-4 text-center">
-          <a href="/spotifylogin" class="btn btn-primary btn-lg">Connect Your Spotify Account and Begin</a>
-        </div>
+          </li>
+        </ul>
+        <br><p>Interested in exploring a whole new world of music? </p>
+        <a class="nav-link" href="/register" style="font-weight: 300; font-size: 17px;">
+          <button class="button-27" role="button">
+            Register today!
+          </button>
+        </a>
       </div>
     </div>
+
   </div>
+  
 </main>
 
 <%- include ('../partials/footer') %>

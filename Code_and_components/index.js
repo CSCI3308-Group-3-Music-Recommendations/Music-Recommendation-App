@@ -66,7 +66,7 @@ app.get('/welcome', (req, res) => {
   });
 
 app.get('/', (req, res) => {
-  res.redirect('/login'); //this will call /login route in the API
+  res.redirect('/home'); //this will call /login route in the API
 });
 
 app.get('/discover', (req, res) => {
@@ -121,7 +121,7 @@ app.post("/login", async (req, res) => {
       req.session.user = user;
       req.session.save(() => {
         console.log("Logging in...");
-        res.redirect('/home');
+        res.redirect('/profile');
       });
     } else {
       res.redirect('/loginFail');

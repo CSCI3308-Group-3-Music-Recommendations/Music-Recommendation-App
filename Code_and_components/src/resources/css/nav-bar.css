@@ -4,6 +4,7 @@ html, body {
 
 body {
     position: relative;
+    padding-top: 75px;
 }
 
 .bg-dark {
@@ -29,7 +30,61 @@ body {
     transition: 0.3s;
 }
 
-#recommendations:hover {
+.shadow {
+    background: rgb(254,230,252);
+    background: radial-gradient(circle, rgba(254,230,252,1) 0%, rgba(240,233,251,1) 100%);
+    border-radius: 5px;
+    text-align: left;
+    padding: 30px;
+}
+
+.button {
+    background-color: #bb99ff;
+    border-radius: 5px;
+    border-color: black;
+    border-width: 1px;
+    padding: 5px;
+}
+
+.button-27 {
+    appearance: none;  
+    background-color: black;
+    border: 2px solid #1A1A1A;
+    border-radius: 15px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    line-height: normal;
+    margin: 0;
+    min-height: 40px;
+    min-width: 0;
+    outline: none;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+}
+
+.button-27:disabled {
+  pointer-events: none;
+}
+
+.button-27:hover {
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  transform: translateY(-2px);
+}
+
+.button-27:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+#recommendations:hover, #home:hover {
     background: rgb(25,54,128);
     background: linear-gradient(90deg, rgba(25,54,128,1) 0%, rgba(42,47,137,1) 100%);
     border-radius: 5px;
@@ -65,13 +120,13 @@ body {
     border-radius: 5px;
 }
 
-#logout {
+#logout, #login {
     position: absolute;
     right: 10px;
     top: 8px;
 }
 
-#logout:hover {
+#logout:hover, #login:hover {
     background: rgb(155,8,196);
     background: linear-gradient(90deg, rgba(155,8,196,1) 0%, rgba(168,3,201,1) 100%);
     border-radius: 5px;
@@ -89,6 +144,9 @@ body {
 }
 
 .navbar {
+    position: fixed;
+    top: 0px;
+    width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
 }
