@@ -2,7 +2,7 @@
 <%- include ('../partials/menu') %>
 
 <main>
-    <div class="container">
+    <div class="container mt-5">
       <h1 class="text-center">Discover Events Based on Your Listening</h1>
       <p class="text-center text-wrap fs-4">Select search to find specific events or enter a location and press fill with your favorite artists to discover events based on your listening</p>
       <form action="/discoverSearch" method="get">
@@ -13,11 +13,9 @@
           <label class="form-label text-center" for="Location">Enter the city you are in</label>
           <input type="text" name="Location" class="form-control" id="Location" />
         </div> 
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary" name="discoverButton" value="search">Search</button>
-        </div>
-        <div class="mb-4">
-          <button type="submit" class="btn btn-primary" name="discoverButton" value="fill">Fill with your favorite artists</button>
+        <div class="input-group mb-3">
+            <button type="submit" class="btn" name="discoverButton" value="search"><img src="resources\img\new search image.png" alt="Search Icon" height="35" width="35"></button>
+            <button type="submit" class="btn btn-primary ml-3" name="discoverButton" value="fill">Fill with your favorite artists</button>
       </div>
         </form>
         <div class="row">

@@ -3,49 +3,50 @@
 
 
 <main>
-    <div class="container search">
+    <div class="container search mt-5">
         <form action="/searchSong" method="get">
-            <div class="mb-4">
-                <label class="form-label" for="InputSong">Type a song to get similar recommendations</label>
-                <input type="text" name="InputSong" class="form-control" id="InputSong" />
+            <div class="mb-4 text-center">
+                <label class="form-label text-center fs-2" for="InputSong">Enter a track to view recommendations </label>
             </div>  
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary">Search</button>
+            <div class="input-group">
+                <input type="text" name="InputSong" class="form-control" id="InputSong" />
+                <button type="submit" class="btn"><img src="resources\img\new search image.png" alt="Search Button" height="35" width="35"></button>
             </div>
         </form>
-        <table class="table table-hover">
+        <table class="table table-hover mt-3">
         <%
         if (tracks)
         { %>
             <thead>
-
                 <th scope="col">Name</th>
                 <th scope="col">Artist</th>
                 <th scope="col">Listeners</th>
                 <th scope="col"></th>
             </thead>
-           <% for (let track of tracks){ %>
-                <tr>
-                    <td id="track-name">
-                        <%=track.name%>
-                    </td>
-                    <td id="track-artist">
-                        <%=track.artist%>
-                    </td>
-                    <td id="track-listens">
-                        <%=track.listeners%>
-                    </td>
-                    <td>
-                        <form action="/displayResults" method="post">
-                            <input type="hidden" name="trackName" value="<%= track.name %>">
-                            <input type="hidden" name="trackArtist" value="<%= track.artist %>">
-                            <button class="btn btn-primary" type="submit">Get Recommendations</button>
-                        </form>
-                    </td>
-                </tr>
-           <% }
-        }     
-        %>
+                <tbody>
+                <% for (let track of tracks){ %>
+                        <tr>
+                            <td id="track-name">
+                                <%=track.name%>
+                            </td>
+                            <td id="track-artist">
+                                <%=track.artist%>
+                            </td>
+                            <td id="track-listens">
+                                <%=track.listeners%>
+                            </td>
+                            <td>
+                                <form action="/displayResults" method="post">
+                                    <input type="hidden" name="trackName" value="<%= track.name %>">
+                                    <input type="hidden" name="trackArtist" value="<%= track.artist %>">
+                                    <button class="btn btn-primary" type="submit">Get Recommendations</button>
+                                </form>
+                            </td>
+                        </tr>
+                <% }
+                }     
+                %>
+            </tbody>
         </table>
     </div>
 </main>
