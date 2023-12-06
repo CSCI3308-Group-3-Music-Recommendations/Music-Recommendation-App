@@ -228,3 +228,14 @@ a.contact:hover {
     text-decoration: none;
     color: white;
 }
+
+.connected {
+    padding: 5px;
+    border-color: #28a745;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    width: 20%;
+    margin: auto;
+    font-size: 17px;
+}

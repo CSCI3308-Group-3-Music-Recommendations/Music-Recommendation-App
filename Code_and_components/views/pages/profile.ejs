@@ -57,11 +57,18 @@
 
     <div class="row">
       <div class="cold-md-6" style="margin-left: 0px; margin-bottom: 10px;">
+        <% if(!spotify_loggedin) { %>
         <div class="my-4 text-center">
           <a href="/spotifylogin">
             <button type="button" class="btn btn-outline-success">Connect Your Spotify Account and Begin</button>
           </a>
         </div>
+        <% } %>
+        <% if(spotify_loggedin) { %>
+          <div class="my-4 text-center">
+            <p class="text-success connected">You're Connected!</p>
+          </div>
+        <% } %>
       </div>
     </div>
   </div>

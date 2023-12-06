@@ -57,6 +57,7 @@ db.connect()
     username: undefined,
     first_name: undefined,
     last_name: undefined,
+    spotify_loggedin: undefined,
   };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -117,6 +118,11 @@ app.post("/login", async (req, res) => {
       user.username = username;
       user.first_name = find_user.first_name;
       user.last_name = find_user.last_name;
+      if (spotify_linked) {
+        user.spotify_loggedin = true;
+      } else {
+        user.spotify_loggedin = false;
+      }
 
       req.session.user = user;
       req.session.save(() => {
@@ -152,6 +158,11 @@ app.post("/loginFail", async (req, res) => {
       user.username = username;
       user.first_name = find_user.first_name;
       user.last_name = find_user.last_name;
+      if (spotify_linked) {
+        user.spotify_loggedin = true;
+      } else {
+        user.spotify_loggedin = false;
+      }
 
       req.session.user = user;
       req.session.save(() => {
@@ -250,11 +261,22 @@ app.post('/registerFail', async (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
-  res.render('pages/profile', {
-    username: req.session.user.username,
-    first_name: req.session.user.first_name,
-    last_name: req.session.user.last_name,
-  });
+  //console.log(req.session.user.spotify_loggedin);
+  if (spotify_linked) {
+    res.render('pages/profile', {
+      username: req.session.user.username,
+      first_name: req.session.user.first_name,
+      last_name: req.session.user.last_name,
+      spotify_loggedin: req.session.user.spotify_loggedin = true,
+    });
+  } else {
+    res.render('pages/profile', {
+      username: req.session.user.username,
+      first_name: req.session.user.first_name,
+      last_name: req.session.user.last_name,
+      spotify_loggedin: req.session.user.spotify_loggedin = false,
+    });
+  }
 });
 
 app.get('/logout', (req, res) => {
@@ -308,10 +330,18 @@ app.get('/callback', function(req, res) {
     //refresh_token = data.refresh_token;
     //localStorage.setItem('refresh_token',refresh_token);
     spotify_linked = true;
+    //console.log(req.session.user.spotify_loggedin);
+    req.session.user.spotify_loggedin = true;
+    console.log('Successfully logged in to Spotify');
 
     //fillTopArtists(access_token);
 
-    res.redirect('/profile');
+    res.render('pages/profile', {
+      username: req.session.user.username,
+      first_name: req.session.user.first_name,
+      last_name: req.session.user.last_name,
+      spotify_loggedin: req.session.user.spotify_loggedin,
+    });
   })
   .catch(error => {
     console.log(error);
