@@ -6,14 +6,9 @@ body {
     position: relative;
 }
 
-.container {
-    width: 1000px;
-    height: 500px;
-    margin: auto;
-    padding: 20px;
-    border-radius: 5%;
-    display: flex;
-    align-items: center;
+.bg-dark {
+    background: rgb(5,37,72);
+    background: linear-gradient(90deg, rgba(5,37,72,1) 0%, rgba(68,27,130,1) 43%, rgba(116,3,140,1) 100%);
 }
 
 #navbar li{
@@ -29,6 +24,62 @@ body {
 
 .nav-item {
     font-size: 16.5px;
+    margin: auto;
+    opacity: 1;
+    transition: 0.3s;
+}
+
+#recommendations:hover {
+    background: rgb(25,54,128);
+    background: linear-gradient(90deg, rgba(25,54,128,1) 0%, rgba(42,47,137,1) 100%);
+    border-radius: 5px;
+}
+
+#toptracks:hover {
+    background: rgb(51,54,153);
+    background: linear-gradient(90deg, rgba(51,54,153,1) 0%, rgba(59,48,156,1) 100%);
+    border-radius: 5px;
+}
+
+#topartists:hover {
+    background: rgb(64,45,159);
+    background: linear-gradient(90deg, rgba(64,45,159,1) 0%, rgba(77,40,164,1) 100%);
+    border-radius: 5px;
+}
+
+#discover:hover {
+    background: rgb(77,40,164);
+    background: linear-gradient(90deg, rgba(77,40,164,1) 0%, rgba(98,41,188,1) 100%);
+    border-radius: 5px;
+}
+
+#spotifylogin:hover {
+    background: rgb(99,38,192);
+    background: linear-gradient(90deg, rgba(99,38,192,1) 0%, rgba(110,37,193,1) 100%);
+    border-radius: 5px;
+}
+
+#profile:hover {
+    background: rgb(109,33,196);
+    background: linear-gradient(90deg, rgba(109,33,196,1) 0%, rgba(123,30,200,1) 100%);
+    border-radius: 5px;
+}
+
+#logout {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+}
+
+#logout:hover {
+    background: rgb(155,8,196);
+    background: linear-gradient(90deg, rgba(155,8,196,1) 0%, rgba(168,3,201,1) 100%);
+    border-radius: 5px;
+}
+
+.nav-link:link, .nav-link:visited, .nav-link:focus  {
+    color: white;
+    text-decoration: none;
 }
 
 .horizontal-center {
@@ -38,8 +89,8 @@ body {
 }
 
 .navbar {
-    padding-top: 2px;
-    padding-bottom: 2px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .footer {
@@ -119,4 +170,13 @@ tr:hover {
 
 .spotify-font{
     font-family: 'Spotify Circular', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.profile-page {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
 }
