@@ -1,26 +1,69 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
+<%- include ('../partials/menu1') %>
 
 <main>
-  <div class="container" style="font-family: Arial, sans-serif; background-color: #f4f4f4; max-width: 800px; margin: auto; padding: 20px;">
-    <h1 style="color: #333; text-align: center; margin-bottom: 20px;">Welcome User: <%= username %></h1>
-    
-    <table class="table">
-      <tbody>
-        <tr>
-          <td>First Name</td>
-          <td><%= first_name %></td>
-        </tr>
-        <tr>
-          <td>Last Name</td>
-          <td><%= last_name %></td>
-        </tr>
-        <tr>
-          <td>Username</td>
-          <td><%= username %></td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="container mt-5 mb-4" style="width: 100%;">
+    <div class="text-center mb-4">
+      <h1 class="display-4" style="padding-bottom: 20px;">Hi <%= username %>!</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6" style="margin-left: 0px; margin-bottom: 10px;">
+        <div class="card mb-2">
+          <a href="/toptracks" class="text-decoration-none">
+            <div class="card-body text-center shadow">
+              <h2 class="card-title">Explore Your Top Tracks</h2>
+              <p>Rediscover old favorites and find new tunes tailored to your taste, all based on your Spotify listening history.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 offset-md-1" style="margin-left: 0px;">
+        <div class="card mb-2">
+          <a href="/discover" class="text-decoration-none">
+            <div class="card-body text-center shadow">
+              <h2 class="card-title">Find Concerts Nearby</h2>
+              <p>Stay updated on live music events and concerts in your area that match your musical preferences.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6" style="margin-left: 0px; margin-bottom: 10px;">
+        <div class="card mb-2">
+          <a href="/topartists" class="text-decoration-none">
+            <div class="card-body text-center shadow">
+              <h2 class="card-title">Discover Your Top Artists</h2>
+              <p>Delve into the world of your favorite musicians and keep up with their latest releases and discographies.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 offset-md-1" style="margin-left: 0px;">
+        <div class="card mb-2">
+          <a href="/recommendations" class="text-decoration-none">
+            <div class="card-body text-center shadow" style="padding-bottom: 40px;">
+              <h2 class="card-title">Receive Recommendations</h2>
+              <p>Simply search any song of your choosing and uncover a world of similar music.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="cold-md-6" style="margin-left: 0px; margin-bottom: 10px;">
+        <div class="my-4 text-center">
+          <a href="/spotifylogin">
+            <button type="button" class="btn btn-outline-success">Connect Your Spotify Account and Begin</button>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 

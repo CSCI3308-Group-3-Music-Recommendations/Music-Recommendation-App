@@ -66,7 +66,7 @@ app.get('/welcome', (req, res) => {
   });
 
 app.get('/', (req, res) => {
-  res.redirect('/login'); //this will call /login route in the API
+  res.redirect('/home'); //this will call /login route in the API
 });
 
 app.get('/discover', (req, res) => {
@@ -104,17 +104,15 @@ app.get('/loginFail', (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-
     const username = req.body.username;
     const find_user = await db.oneOrNone('select * from users where username =  $1', username);
 
     if (!find_user) {
+      //res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
       res.redirect('/register');
       return;
     }
-
     const match = await bcrypt.compare(req.body.password, find_user.password);
-  
     if (match) {
       user.username = username;
       user.first_name = find_user.first_name;
@@ -123,7 +121,7 @@ app.post("/login", async (req, res) => {
       req.session.user = user;
       req.session.save(() => {
         console.log("Logging in...");
-        res.redirect('/home');
+        res.redirect('/profile');
       });
     } else {
       res.redirect('/loginFail');
@@ -139,11 +137,11 @@ app.post("/login", async (req, res) => {
 //same code as /login app.post
 app.post("/loginFail", async (req, res) => {
   try {
-
     const username = req.body.username;
     const find_user = await db.oneOrNone('select * from users where username =  $1', username);
 
     if (!find_user) {
+      //res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
       res.redirect('/register');
       return;
     }
@@ -158,7 +156,7 @@ app.post("/loginFail", async (req, res) => {
       req.session.user = user;
       req.session.save(() => {
         console.log("Logging in...");
-        res.redirect('/home');
+        res.redirect('/profile');
       });
     } else {
       res.redirect('/loginFail');
@@ -178,6 +176,8 @@ app.get('/register', (req, res) => {
 app.post('/register', async (req, res) => {
   
   const username = req.body.username;
+  const first_name = req.body.first_name;
+  const last_name = req.body.last_name;
   const find_user = await db.oneOrNone('select * from users where username =  $1', username);
   
     if (find_user) {
@@ -227,11 +227,15 @@ app.post('/registerFail', async (req, res) => {
   const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`;
  
   db.task('add-user', task => {
-    return task.batch([task.any(add_user, [req.body.username, hash, req.body.first_name, req.body.last_name])]);
+    return task.batch([task.any(add_user, [username, hash, first_name, last_name])]);
   })
     // if query execution succeeds, redirect to GET /login page
     // if query execution fails, redirect to GET /register route
     .then(data => {
+      console.log("Registering user...");
+      console.log(username);
+      console.log(first_name);
+      console.log(last_name);
       //res.status(200).json({status: 'Success', message: 'User successfully registered.'});
       res.redirect('/login');
     })
@@ -255,7 +259,6 @@ app.get('/profile', (req, res) => {
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  //res.render("pages/login");
   res.render("pages/login", {
     message: `Logged out successfully.`,
   });
@@ -308,7 +311,7 @@ app.get('/callback', function(req, res) {
 
     //fillTopArtists(access_token);
 
-    res.redirect('/home');
+    res.redirect('/profile');
   })
   .catch(error => {
     console.log(error);
