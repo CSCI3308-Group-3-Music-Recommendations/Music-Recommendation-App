@@ -3,23 +3,24 @@
 <main>
   <div class="container">
     <h1 class="horizontal-center display-5" style="padding-top: 30px; padding-bottom: 30px;">Register</h1>
+    <p id="message">The Username you entered has already been used, please pick another one.</p>
     <div class="horizontal-center">
       <form action="/register" method="POST" style="width: 40%;">
         <div class="mb-3">
           <label for="firstname" class="form-label">First Name:</label>
-          <input type="text" class="form-control" id="first_name" name="first_name" required/>
+          <input type="text" class="form-control" id="firstname" name="firstname" />
         </div>
         <div class="mb-3">
           <label for="lastname" class="form-label">Last Name:</label>
-          <input type="text" class="form-control" id="last_name" name="last_name" required/>
+          <input type="text" class="form-control" id="lastname" name="lastname" />
         </div>
         <div class="mb-3">
           <label for="username" class="form-label">Username:</label>
-          <input type="text" class="form-control" id="username" name="username" required/>
+          <input type="text" class="form-control" id="username" name="username" />
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password:</label>
-          <input type="password" class="form-control" id="password" name="password" required/>
+          <input type="password" class="form-control" id="password" name="password" />
         </div>
         <div class="mb-3">
           <p>Already have an account? <a href="/login">Login</a></p>
@@ -29,7 +30,6 @@
     </div>
   </div>
   <div>
-    <p id="idk"></p>
   </div>
 </main>
 

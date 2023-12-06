@@ -94,6 +94,14 @@ app.get('/recommendations', (req, res) => {
   res.render('pages/recommendations', {tracks: []});
 });
 
+app.get('/registerFail', (req, res) => {
+  res.render('pages/registerFail', {tracks: []});
+});
+
+app.get('/loginFail', (req, res) => {
+  res.render('pages/loginFail', {tracks: []});
+});
+
 app.post("/login", async (req, res) => {
   try {
     const username = req.body.username;
@@ -113,10 +121,47 @@ app.post("/login", async (req, res) => {
       req.session.user = user;
       req.session.save(() => {
         console.log("Logging in...");
+        res.redirect('/home');
+      });
+    } else {
+      res.redirect('/loginFail');
+      //throw new Error("Incorrect username or password.");
+      
+    }
+  } catch (error) {
+    res.render('pages/login', { error: "Incorrect username or password." });
+    console.log("Incorrect username or password.");
+  }
+});
+
+//same code as /login app.post
+app.post("/loginFail", async (req, res) => {
+  try {
+    const username = req.body.username;
+    const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+
+    if (!find_user) {
+      //res.status(200).json({ status: 'Failure', message: 'Incorrect username or password.' });
+      res.redirect('/register');
+      return;
+    }
+
+    const match = await bcrypt.compare(req.body.password, find_user.password);
+  
+    if (match) {
+      user.username = username;
+      user.first_name = find_user.first_name;
+      user.last_name = find_user.last_name;
+
+      req.session.user = user;
+      req.session.save(() => {
+        console.log("Logging in...");
         res.redirect('/profile');
       });
     } else {
-      throw new Error("Incorrect username or password.");
+      res.redirect('/loginFail');
+      //throw new Error("Incorrect username or password.");
+      
     }
   } catch (error) {
     res.render('pages/login', { error: "Incorrect username or password." });
@@ -129,9 +174,52 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  
   const username = req.body.username;
   const first_name = req.body.first_name;
   const last_name = req.body.last_name;
+  const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+  
+    if (find_user) {
+      res.redirect('/registerFail');
+      console.log("Username has already been used.")    
+      return;
+    }    
+  // hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
+
+  //To-Do: Insert username and hashed password into 'users' table
+  const add_user = `insert into users (username, password, first_name, last_name) values ($1, $2, $3, $4) returning * ;`;
+ 
+  db.task('add-user', task => {
+    return task.batch([task.any(add_user, [req.body.username, hash, req.body.first_name, req.body.last_name])]);
+  })
+    // if query execution succeeds, redirect to GET /login page
+    // if query execution fails, redirect to GET /register route
+    .then(data => {
+      //res.status(200).json({status: 'Success', message: 'User successfully registered.'});
+      res.redirect('/login');
+    })
+    // if query execution fails
+    // send error message
+    .catch(err => {
+      //res.status(200).json({status: 'Failure', message: 'Issues registering user.'});
+      console.log('Uh Oh spaghettio');
+      console.log(err);
+      res.redirect('/register');
+    });
+});
+
+//same code as app.post for /register
+app.post('/registerFail', async (req, res) => {
+  const username = req.body.username;
+  const find_user = await db.oneOrNone('select * from users where username =  $1', username);
+  
+    if (find_user) {
+      res.redirect('/registerFail');
+      console.log("Username has already been used.")    
+      return;
+    }    
   // hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
@@ -221,25 +309,62 @@ app.get('/callback', function(req, res) {
     //localStorage.setItem('refresh_token',refresh_token);
     spotify_linked = true;
 
+    //fillTopArtists(access_token);
 
-
-    res.redirect('/toptracks');
+    res.redirect('/home');
   })
   .catch(error => {
     console.log(error);
   })
 });
 
-async function getProfile(accessToken) {
-  const response = await fetch('https://api.spotify.com/v1/me', {
-    headers: {
-      Authorization: 'Bearer ' + accessToken
-    }
-  });
 
-  const data = await response.json();
-  console.log(data);
+async function fillTopArtists(accessToken) {
+
+  let url = `https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50`;
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+  };
+
+  let topArtists;
+
+  axios.get(
+    url,
+    config
+    ).then(response => {
+      console.log(response);
+      //setTopArtists(response.data.items);
+      topArtists = response.data.items;
+      //console.log(topArtists);
+      
+      //setTopArtistsActivated(true);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+
+  const add_artists = `insert into top_artists (username) values ($1) returning * ;`;
+
+  for (let artist of topArtists) {
+    db.task('add-artists', task => {
+      task.batch([task.any(add_artists, [artist.name])]);
+    })
+    .then(data => {
+      res.redirect('/home');
+    })
+  
+    .catch(err => {
+      console.log('Uh Oh spaghettio');
+      console.log(err);
+      res.redirect('/register');
+    });
+  }
+
 }
+
 
 
 app.get('/getTopTracks/:time_range', function(req, res) {
@@ -287,7 +412,7 @@ app.get('/getTopArtists/:time_range', function(req, res) {
     ).then(response => {
       //setTopArtists(response.data.items);
       topArtists = response.data.items;
-      console.log(topArtists);
+      //console.log(topArtists);
       res.render('pages/topartists', {artists: topArtists})
       
       //setTopArtistsActivated(true);
@@ -300,43 +425,76 @@ app.get('/getTopArtists/:time_range', function(req, res) {
 });
 
 
-
   app.get('/discoverSearch', async (req, res) => {
     //const query = `SELECT long_term_top_artists FROM top_artists WHERE user_id = ${req.session.user.user_id}`
     //const artists = await db.any(query);
     //if (artists)
     //{
-      const RefEvent = req.query.InputEvent
       const Location = req.query.Location
-      try{
-        const response = await axios({
-            url: `https://app.ticketmaster.com/discovery/v2/events.json`,
-            method: 'GET',
-            dataType: 'json',
-            headers: {
-              'Accept-Encoding': 'application/json',
-            },
-            params: {
-              apikey: process.env.TICKETMASTER_API_KEY,
-              keyword: RefEvent, //you can choose any artist/event here
-              city: Location,
-              radius: 100,
-              size: 20 // you can choose the number of events you would like to return
-            },
-          })
-          const events = response.data._embedded.events;
-          res.render('pages/discover', {events: events})
-        }
-        catch(error){
-          console.error(error);
-          res.render('pages/discover', {events: [] , error: 'failed'})
-        }
-    //}
-    //else
-    //{
-      //res.render('pages/discover', {events: []});
-    //}
+
+      if(req.query.discoverButton == "search") {
+        const RefEvent = req.query.InputEvent
+        events = await discoverEvents(Location, RefEvent)
+        res.render('pages/discover', {events: events});
+      } else if(req.query.discoverButton == "fill") {
+        let url = `https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=20`;
+
+        const config = {
+          headers: {
+              Authorization: `Bearer ${access_token}`,
+            }
+        };
+
+        axios.get(
+          url,
+          config
+          ).then(async response => {
+            topArtists = response.data.items;
+            
+            let events = [];
+            let artist;
+            let event;
+            for(let index in topArtists) {
+              artist = topArtists[index].name
+              event = await discoverEvents(Location,artist);
+              if(event) {
+                events = events.concat(event);
+              }
+            };
+            //console.log(events);
+            res.render('pages/discover', {events: events});
+            
+        })
+      }
+      
   });
+
+  async function discoverEvents(Location, RefEvent) {
+    try{
+      const response = await axios({
+          url: `https://app.ticketmaster.com/discovery/v2/events.json`,
+          method: 'GET',
+          dataType: 'json',
+          headers: {
+            'Accept-Encoding': 'application/json',
+          },
+          params: {
+            apikey: process.env.TICKETMASTER_API_KEY,
+            keyword: RefEvent, //you can choose any artist/event here
+            city: Location,
+            radius: 100,
+            size: 2 // you can choose the number of events you would like to return
+          },
+        })
+        console.log(response.data._embedded);
+        if (response.data._embedded.events){
+          return response.data._embedded.events;
+        }
+      }
+      catch(error){
+        console.error(error);
+      }
+  }
   
 
 

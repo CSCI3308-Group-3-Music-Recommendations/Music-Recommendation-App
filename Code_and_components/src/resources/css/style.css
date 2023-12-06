@@ -1,0 +1,24 @@
+footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 110vh;
+}
+
+main{
+    flex: 1;
+    margin-bottom: 100px;
+}
+
+#message{
+    background-color: #ffa7a7;
+    color: #d61e1e;
+    text-align: center;
+    padding: 5px;
+    font-weight: bold;
+}
