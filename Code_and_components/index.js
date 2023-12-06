@@ -311,7 +311,7 @@ app.get('/callback', function(req, res) {
 
     //fillTopArtists(access_token);
 
-    res.redirect('/home');
+    res.redirect('/profile');
   })
   .catch(error => {
     console.log(error);
