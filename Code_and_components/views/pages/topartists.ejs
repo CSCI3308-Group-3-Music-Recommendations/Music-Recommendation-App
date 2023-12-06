@@ -1,34 +1,34 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu1') %>
 
-<main>
-  <div class="container">
+<mainTwo>
+  <div class="container bg-dark">
     <h1 class="text-center">Your Top Artists</h1>
     <ul class="nav nav-tabs justify-content-center">
       <li class="nav-item">
-        <a href="/getTopArtists/short_term" class="nav-link">Last 4 Weeks</a>
+        <a href="/getTopArtists/short_term" style="color: blue" class="nav-link">Last 4 Weeks</a>
       </li>
       <li class="nav-item">
-        <a href="/getTopArtists/medium_term" class="nav-link">Last 6 Months</a>
+        <a href="/getTopArtists/medium_term" style="color: blue" class="nav-link">Last 6 Months</a>
       </li>
       <li class="nav-item">
-        <a href="/getTopArtists/long_term" class="nav-link">Lifetime</a>
+        <a href="/getTopArtists/long_term" style="color: blue" class="nav-link">Lifetime</a>
       </li>
     </ul>
     <ul class="nav nav-tabs justify-content-center">
       <li class="nav-item">
-        <a href="/collageArtists/short_term" class="nav-link">Collage</a>
+        <a href="/collageArtists/short_term" style="color: blue" class="nav-link">Collage</a>
       </li>
       <li class="nav-item">
-        <a href="/collageArtists/medium_term" class="nav-link">Collage</a>
+        <a href="/collageArtists/medium_term" style="color: blue" class="nav-link">Collage</a>
       </li>
       <li class="nav-item">
-        <a href="/collageArtists/long_term" class="nav-link">Collage</a>
+        <a href="/collageArtists/long_term" style="color: blue" class="nav-link">Collage</a>
       </li>
     </ul>
   </div>
-      <table class="table table-hover">
-      <%
+  <table class="table table-dark table-striped">
+    <%
         if (artists)
         { %>
           <thead>
@@ -51,7 +51,7 @@
       %>
     </table>
  
-</main>
+</mainTwo>
 
 <%- include ('../partials/footer') %>
 <script src="Music-Recommendation-App\Code_and_components\index.js"></script>
