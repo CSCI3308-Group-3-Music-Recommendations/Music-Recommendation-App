@@ -14,7 +14,17 @@ main{
     flex: 1;
     margin-bottom: 100px;
 }
-
+mainTwo{
+    flex: 1;
+    margin-bottom: 100px;
+    background: linear-gradient(90deg, rgba(5,37,72,1) 0%, rgba(68,27,130,1) 43%, rgba(116,3,140,1) 100%);
+    margin-top: -25px;
+}
+mainThree{
+    flex: 1;
+    margin-bottom: 100px;
+    background: linear-gradient(90deg, rgba(5,37,72,1) 0%, rgba(68,27,130,1) 43%, rgba(116,3,140,1) 100%);
+}
 #message{
     background-color: #ffa7a7;
     color: #d61e1e;
