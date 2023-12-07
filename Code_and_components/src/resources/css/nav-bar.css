@@ -90,33 +90,21 @@ body {
     border-radius: 5px;
 }
 
-#toptracks:hover {
+#discover:hover, #recommendations1:hover {
     background: rgb(51,54,153);
     background: linear-gradient(90deg, rgba(51,54,153,1) 0%, rgba(59,48,156,1) 100%);
     border-radius: 5px;
 }
 
-#topartists:hover {
+#spotifylogin:hover {
     background: rgb(64,45,159);
     background: linear-gradient(90deg, rgba(64,45,159,1) 0%, rgba(77,40,164,1) 100%);
     border-radius: 5px;
 }
 
-#discover:hover {
+#profile:hover {
     background: rgb(77,40,164);
     background: linear-gradient(90deg, rgba(77,40,164,1) 0%, rgba(98,41,188,1) 100%);
-    border-radius: 5px;
-}
-
-#spotifylogin:hover {
-    background: rgb(99,38,192);
-    background: linear-gradient(90deg, rgba(99,38,192,1) 0%, rgba(110,37,193,1) 100%);
-    border-radius: 5px;
-}
-
-#profile:hover {
-    background: rgb(109,33,196);
-    background: linear-gradient(90deg, rgba(109,33,196,1) 0%, rgba(123,30,200,1) 100%);
     border-radius: 5px;
 }
 

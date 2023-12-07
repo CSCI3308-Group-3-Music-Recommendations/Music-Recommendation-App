@@ -67,3 +67,7 @@ async function displaySimilarSongs(similarTracks)
     })
 
 }
+
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();   
+});
