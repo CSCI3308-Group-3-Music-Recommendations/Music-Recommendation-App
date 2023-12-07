@@ -464,7 +464,7 @@ app.get('/getTopArtists/:time_range', function(req, res) {
 
       if(req.query.discoverButton == "search") {
         const RefEvent = req.query.InputEvent
-        events = await discoverEvents(Location, RefEvent)
+        events = await discoverEvents(Location, RefEvent, 20)
         res.render('pages/discover', {events: events});
       } else if(req.query.discoverButton == "fill") {
         let url = `https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=20`;
@@ -486,7 +486,7 @@ app.get('/getTopArtists/:time_range', function(req, res) {
             let event;
             for(let index in topArtists) {
               artist = topArtists[index].name
-              event = await discoverEvents(Location,artist);
+              event = await discoverEvents(Location,artist, 2);
               if(event) {
                 events = events.concat(event);
               }
@@ -499,7 +499,7 @@ app.get('/getTopArtists/:time_range', function(req, res) {
       
   });
 
-  async function discoverEvents(Location, RefEvent) {
+  async function discoverEvents(Location, RefEvent, limit) {
     try{
       const response = await axios({
           url: `https://app.ticketmaster.com/discovery/v2/events.json`,
@@ -513,7 +513,7 @@ app.get('/getTopArtists/:time_range', function(req, res) {
             keyword: RefEvent, //you can choose any artist/event here
             city: Location,
             radius: 100,
-            size: 2 // you can choose the number of events you would like to return
+            size: limit // you can choose the number of events you would like to return
           },
         })
         console.log(response.data._embedded);
