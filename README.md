@@ -18,3 +18,4 @@ Make sure you have docker open and run "docker-compose up" and then go to http:/
 To run the tests, switch to the testing branch and run "docker-compose up".
 
 # Link to the deployed application
+http://recitation-11-team-03.eastus.cloudapp.azure.com:3000/home
