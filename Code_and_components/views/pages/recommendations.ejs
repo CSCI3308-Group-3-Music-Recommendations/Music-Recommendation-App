@@ -2,18 +2,18 @@
 <%- include ('../partials/menu1') %>
 
 
-<main>
+<mainTwo>
     <div class="container search mt-5">
         <form action="/searchSong" method="get">
             <div class="mb-4 text-center">
-                <label class="form-label text-center fs-2" for="InputSong">Enter a track to view recommendations </label>
+                <label class="form-label text-center fs-2" style="color: white;" for="InputSong">Enter a track to view recommendations </label>
             </div>  
             <div class="input-group">
                 <input type="text" name="InputSong" class="form-control" id="InputSong" />
                 <button type="submit" class="btn"><img src="resources\img\new search image.png" alt="Search Button" height="35" width="35"></button>
             </div>
         </form>
-        <table class="table table-hover mt-3">
+        <table class="table table-dark table-striped">
         <%
         if (tracks)
         { %>
@@ -49,7 +49,7 @@
             </tbody>
         </table>
     </div>
-</main>
+</mainTwo>
 
 
 
