@@ -560,6 +560,74 @@ app.post('/displayResults', async (req, res) => {
     
 });
 
+
+app.get('/displaySpotifyResultsTracks', async (req, res) =>{
+  let track_id = req.query.track_id;
+  let artist_id = req.query.artist_id;
+  let url = `https://api.spotify.com/v1/recommendations?seed_artists=${artist_id}&seed_tracks=${track_id}`
+  try{
+    const config = {
+      headers: {
+          Authorization: `Bearer ${access_token}`,
+        }
+    };
+  
+    axios.get(
+      url,
+      config
+      ).then(response => {
+        //setTopArtists(response.data.items);
+        searchResults = response.data.tracks;
+        //console.log(topArtists);
+        res.render('pages/SpotifyTrackRecResults', {tracks: searchResults})
+        
+        //setTopArtistsActivated(true);
+    })
+    .catch(error => {
+      console.log(error);
+      res.render('pages/SpofityTrackRecResults', {tracks: []})
+    })
+  }
+  catch(error){
+    console.log(error);
+    res.render('pages/SpotifyTrackRecResults', {tracks: [],error: 'failed'})
+  }
+});
+
+
+app.get('/displaySpotifyResultsArtists', async (req, res) =>{
+  let artist_id = req.query.artist_id;
+  let url = `https://api.spotify.com/v1/artists/${artist_id}/related-artists`
+  try{
+    const config = {
+      headers: {
+          Authorization: `Bearer ${access_token}`,
+        }
+    };
+  
+    axios.get(
+      url,
+      config
+      ).then(response => {
+        //setTopArtists(response.data.items);
+        searchResults = response.data.artists;
+        //console.log(topArtists);
+        res.render('pages/SpotifyArtistRecResults', {artists: searchResults})
+        
+        //setTopArtistsActivated(true);
+    })
+    .catch(error => {
+      console.log(error);
+      res.render('pages/SpotifyArtistRecResults', {artists: []})
+    })
+  }
+  catch(error){
+    console.log(error);
+    res.render('pages/SpotifyTrackRecResults', {tracks: [],error: 'failed'})
+  }
+});
+
+
 //collage API
 
 app.get('/collageTracks/:time_range', function(req, res) {

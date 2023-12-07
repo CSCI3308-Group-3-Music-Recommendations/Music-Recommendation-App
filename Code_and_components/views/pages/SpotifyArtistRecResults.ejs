@@ -7,30 +7,30 @@
         <h2>Search Results:</h2>
         <table class="table table-hover">
         <%
-        if (tracks)
+        if (artists)
         { %>
             <thead>
-                <th scope="col">Name</th>
                 <th scope="col">Artist</th>
-                <th scope="col">Listens</th>
+                <th scope="col">Genre</th>
+                <th scope="col">Image</th>
             </thead>
-           <% for (let track of tracks){ %>
+           <% for (let artist of artists){ %>
                 <tr>
-                    <td id="track-name">
-                        <%=track.name%>
+                    <td>
+                        <%=artist.name%>
                     </td>
-                    <td id="track-artist">
-                        <%=track.artist.name%>
+                    <td>
+                        <%=artist.genres[0]%>
                     </td>
-                    <td id="track-plays">
-                        <%=track.playcount%>
+                    <td>
+                        <img src="<%=artist.images[0].url%>" height="150" width="150" alt="Artist Image">
                     </td>
                 </tr>
            <% }
         }  
         else
         { %>
-            <h2>Sorry! That Song has no Results</h2>
+            <h2>Sorry! That Artist has no Results</h2>
        <% }   
         %>
         </table>

@@ -36,6 +36,7 @@
             <th class="text-center fs-2" scope="col">Name</th>
             <th class="text-center fs-2" scope="col">Top Genre</th>
             <th class="text-center fs-2" scope="col">Image</th>
+            <th class="text-center fs-2" scope="col">Get Recommendations</th>
           </thead>
           <%
           let count = 1;
@@ -45,6 +46,12 @@
               <td class="text-center fs-5"> <%=artist.name %></td>
               <td class="text-center fs-5"> <%=artist.genres[0] %></td>
               <td class="text-center fs-5"> <img src="<%=artist.images[2].url %>" width="150" height="150" alt="artist image"></td>
+              <td class="text-center fs-5">
+                <form action="/displaySpotifyResultsArtists" method="get">
+                  <input type="hidden" name="artist_id" value="<%= artist.id %>">
+                  <button class="btn btn-primary" type="submit">Get Recommendations</button>
+                </form>
+              </td>
             </tr>
          <% }
         }
