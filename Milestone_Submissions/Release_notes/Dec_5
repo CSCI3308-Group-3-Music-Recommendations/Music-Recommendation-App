@@ -1,1 +1,37 @@
+## What's Changed
+* Partials by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/15
+* worked on login page by @liviah12 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/17
+* Added profile page code by @Ali-Haroon3 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/18
+* added discover page and updated index.js starting user session by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/19
+* Added discover page and discover API by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/21
+* added file for next TA meeting by @liviah12 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/20
+* Added routes for spotify api by @d9eman in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/22
+* Added more styling to profile ejs by @Ali-Haroon3 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/23
+* added work done to November 15th doc by @liviah12 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/24
+* Changed styling of header and footer, also added an href in the menu by @Ali-Haroon3 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/26
+* updated login route to add first and last name to database, added note… by @liviah12 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/27
+* Getting memory leak by @isgo5880 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/28
+* testing by @isgo5880 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/29
+* Testing - passing 3 by @isgo5880 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/30
+* Working on positive and negative login test cases by @isgo5880 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/31
+* Fixed all tests and rewrote index.js so each route has one res. funct… by @isgo5880 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/32
+* Recommendations page by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/35
+* Recommendations page (added like 2 lines of code but wanted to commit before TA meeting) by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/36
+* Top tracks prototype and discover by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/37
+* updated menu (small change for presentation) by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/38
+* Worked on issue where username is taken when registering by @liviah12 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/39
+* Discover page prototype works by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/40
+* Home by @Ali-Haroon3 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/41
+* Top tracks, artist UI works by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/42
+* Created a new feature to display a collage of users favorite songs and artists by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/43
+* Discover Page works by @Tyler-oc in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/45
+* Olivia by @liviah12 in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/46
 
+## New Contributors
+* @Tyler-oc made their first contribution in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/15
+* @liviah12 made their first contribution in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/17
+* @Ali-Haroon3 made their first contribution in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/18
+* @d9eman made their first contribution in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/22
+* @isgo5880 made their first contribution in https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/pull/28
+
+**Full Changelog**: https://github.com/CSCI3308-Group-3-Music-Recommendations/Music-Recommendation-App/commits/v1.0.0
