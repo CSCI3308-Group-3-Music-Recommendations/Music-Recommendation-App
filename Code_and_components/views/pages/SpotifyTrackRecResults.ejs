@@ -12,7 +12,9 @@
             <thead>
                 <th scope="col">Name</th>
                 <th scope="col">Artist</th>
-                <th scope="col">Listens</th>
+                <th scope="col">Album</th>
+                <th scope="col">Image</th>
+                <th scope="col">Preview</th>
             </thead>
            <% for (let track of tracks){ %>
                 <tr>
@@ -20,10 +22,16 @@
                         <%=track.name%>
                     </td>
                     <td id="track-artist">
-                        <%=track.artist.name%>
+                        <%=track.artists[0].name%>
                     </td>
-                    <td id="track-plays">
-                        <%=track.playcount%>
+                    <td>
+                        <%=track.album.name%>
+                    </td>
+                    <td>
+                        <img src="<%=track.album.images[1].url%>" height="150" width="150" alt="Track Image">
+                    </td>
+                    <<td class="text-center fs-5">
+                        <a href="<%=track.preview_url%>" role="button" class="btn btn-primary">Preview Song</a>
                     </td>
                 </tr>
            <% }
