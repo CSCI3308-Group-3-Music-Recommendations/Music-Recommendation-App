@@ -1,0 +1,14 @@
+Minutes for December 6th TA Meeting:
+
+minutes for meeting:
+tyler: ui's, discover page, small features (collage), api routes
+ali: ui for top tracks/artists, release notes 
+isabelle: testing, web design/ui, home/profile pages
+emanuele: top tracks (multiple time periods), discover page
+olivia: error messages, project report/presentation
+
+did a demo
+
+take a look at limit to api, keep backup of working one, record a demo
+
+could combine webserve and nodejs for architecture diagram
