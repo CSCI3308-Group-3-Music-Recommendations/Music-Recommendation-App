@@ -1,5 +1,10 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/menu1') %>
+<% if(typeof username == "undefined") { %>
+    <%- include ('../partials/menu2') %>
+<% } %>
+<% if(typeof username != "undefined") { %>
+    <%- include ('../partials/menu1') %>
+<% } %>
 
 
 <mainTwo>
@@ -9,7 +14,7 @@
                 <label class="form-label text-center fs-2" style="color: white;" for="InputSong">Enter a track to view recommendations </label>
             </div>  
             <div class="input-group">
-                <input type="text" name="InputSong" class="form-control" id="InputSong" />
+                <input type="text" name="InputSong" class="form-control" placeholder="Enter a song name..." id="InputSong" />
                 <button type="submit" class="btn"><img src="resources\img\new search image.png" alt="Search Button" height="35" width="35"></button>
             </div>
         </form>
