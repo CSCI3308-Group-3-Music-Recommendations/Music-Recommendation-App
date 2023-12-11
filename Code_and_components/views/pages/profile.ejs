@@ -7,16 +7,33 @@
       <h1 class="display-4" style="padding-bottom: 20px;">Hi <%= username %>!</h1>
     </div>
 
+    <!-- Error Alert -->
+    <div hidden class="alert alert-danger alert-dismissible fade show" id="error_alert">
+      <strong>Sorry!</strong> Connect your account to Spotify to use this feature.
+    </div>
+
     <div class="row">
       <div class="col-md-6" style="margin-left: 0px; margin-bottom: 10px;">
-        <div class="card mb-2">
-          <a href="/toptracks" class="text-decoration-none">
-            <div class="card-body text-center shadow">
-              <h2 class="card-title">Explore Your Top Tracks</h2>
-              <p>Rediscover old favorites and find new tunes tailored to your taste, all based on your Spotify listening history.</p>
-            </div>
-          </a>
-        </div>
+        <% if(spotify_loggedin) { %>
+          <div class="card mb-2">
+            <a href="/toptracks" class="text-decoration-none">
+              <div class="card-body text-center shadow">
+                <h2 class="card-title">Explore Your Top Tracks</h2>
+                <p>Rediscover old favorites and find new tunes tailored to your taste, all based on your Spotify listening history.</p>
+              </div>
+            </a>
+          </div>
+        <% } %>
+        <% if(!spotify_loggedin) { %>
+          <div class="card mb-2" onclick="toggle(this)">
+            <a class="text-decoration-none" id="alert-btn">
+              <div class="card-body text-center shadow">
+                <h2 class="card-title">Explore Your Top Tracks</h2>
+                <p>Rediscover old favorites and find new tunes tailored to your taste, all based on your Spotify listening history.</p>
+              </div>
+            </a>
+          </div>
+        <% } %>
       </div>
 
       <div class="col-md-6 offset-md-1" style="margin-left: 0px;">
@@ -33,14 +50,26 @@
 
     <div class="row">
       <div class="col-md-6" style="margin-left: 0px; margin-bottom: 10px;">
-        <div class="card mb-2">
-          <a href="/topartists" class="text-decoration-none">
-            <div class="card-body text-center shadow">
-              <h2 class="card-title">Discover Your Top Artists</h2>
-              <p>Delve into the world of your favorite musicians and keep up with their latest releases and discographies.</p>
-            </div>
-          </a>
-        </div>
+        <% if(spotify_loggedin) { %>
+          <div class="card mb-2">
+            <a href="/topartists" class="text-decoration-none">
+              <div class="card-body text-center shadow">
+                <h2 class="card-title">Discover Your Top Artists</h2>
+                <p>Delve into the world of your favorite musicians and keep up with their latest releases and discographies.</p>
+              </div>
+            </a>
+          </div>
+        <% } %>
+        <% if(!spotify_loggedin) { %>
+          <div class="card mb-2" onclick="toggle(this)">
+            <a class="text-decoration-none">
+              <div class="card-body text-center shadow">
+                <h2 class="card-title">Discover Your Top Artists</h2>
+                <p>Delve into the world of your favorite musicians and keep up with their latest releases and discographies.</p>
+              </div>
+            </a>
+          </div>
+        <% } %>
       </div>
 
       <div class="col-md-6 offset-md-1" style="margin-left: 0px;">

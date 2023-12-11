@@ -10,5 +10,17 @@
         <link rel="stylesheet" href="/resources/css/style.css">
         <link rel="icon" href="/resources/img/favicon.png">
         <!-- <a href="https://www.flaticon.com/free-icons/music-note" title="music note icons">Music note icons created by Freepik - Flaticon</a> -->
+        <script>
+            let toggle = button => {
+                let element = document.getElementById("error_alert");
+                let hidden = element.getAttribute("hidden");
+
+                if(hidden) {
+                    element.removeAttribute("hidden");
+                } else {
+                    element.setAttribute("hidden", "hidden");
+                }
+            }
+        </script>
     </head>
     <body>

@@ -1,8 +1,8 @@
 <%- include ('../partials/header') %>
-<% if(typeof username == "undefined") { %>
+<% if(typeof username === "undefined") { %>
     <%- include ('../partials/menu2') %>
 <% } %>
-<% if(typeof username != "undefined") { %>
+<% if(typeof username !== "undefined") { %>
     <%- include ('../partials/menu1') %>
 <% } %>
 

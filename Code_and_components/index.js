@@ -92,7 +92,19 @@ app.get('/topartists', (req, res) => {
 
 
 app.get('/recommendations', (req, res) => {
-  res.render('pages/recommendations', {tracks: []});
+  if (req.session.user?.username) {
+    console.log("username exists");
+    res.render('pages/recommendations', {
+      tracks: [],
+      username: req.session.user.username,
+      first_name: req.session.user.first_name,
+      last_name: req.session.user.last_name,
+      spotify_loggedin: req.session.user.spotify_loggedin,
+    });
+  } else {
+    console.log("username is undefined");
+    res.render('pages/recommendations', { tracks: [] });
+  }
 });
 
 app.get('/registerFail', (req, res) => {
