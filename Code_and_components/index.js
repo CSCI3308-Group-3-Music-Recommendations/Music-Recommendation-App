@@ -57,7 +57,7 @@ db.connect()
     username: undefined,
     first_name: undefined,
     last_name: undefined,
-    spotify_loggedin: undefined,
+    spotify_loggedin: false,
   };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -71,13 +71,23 @@ app.get('/', (req, res) => {
 });
 
 app.get('/discover', (req, res) => {
-  res.render('pages/discover', {
-    events: [],
-    username: req.session.user.username,
-    first_name: req.session.user.first_name,
-    last_name: req.session.user.last_name,
-    spotify_loggedin: req.session.user.spotify_loggedin,
-  });
+  if(req.session.user?.spotify_loggedin) {
+    res.render('pages/discover', {
+      events: [],
+      username: req.session.user.username,
+      first_name: req.session.user.first_name,
+      last_name: req.session.user.last_name,
+      spotify_loggedin: req.session.user.spotify_loggedin,
+    });
+  } else {
+    res.render('pages/discover', {
+      events: [],
+      username: req.session.user.username,
+      first_name: req.session.user.first_name,
+      last_name: req.session.user.last_name,
+      spotify_loggedin: req.session.user.spotify_loggedin = false,
+    });
+  }
 });
 
 app.get('/home', (req, res) => {
@@ -483,7 +493,13 @@ app.get('/getTopArtists/:time_range', function(req, res) {
       if(req.query.discoverButton == "search") {
         const RefEvent = req.query.InputEvent
         events = await discoverEvents(Location, RefEvent, 20)
-        res.render('pages/discover', {events: events});
+        res.render('pages/discover', {
+          events: events,
+          username: req.session.user.username,
+          first_name: req.session.user.first_name,
+          last_name: req.session.user.last_name,
+          spotify_loggedin: req.session.user.spotify_loggedin,
+        });
       } else if(req.query.discoverButton == "fill") {
         let url = `https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=20`;
 
@@ -510,8 +526,13 @@ app.get('/getTopArtists/:time_range', function(req, res) {
               }
             };
             //console.log(events);
-            res.render('pages/discover', {events: events});
-            
+            res.render('pages/discover', {
+              events: events,
+              username: req.session.user.username,
+              first_name: req.session.user.first_name,
+              last_name: req.session.user.last_name,
+              spotify_loggedin: req.session.user.spotify_loggedin,
+            });
         })
       }
       
