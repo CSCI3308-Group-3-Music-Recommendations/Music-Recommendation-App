@@ -575,11 +575,20 @@ app.get('/getTopArtists/:time_range', function(req, res) {
     try{
       const response = await axios({url: searchUrl})
       const searchResults = response.data.results.trackmatches.track   
-      res.render('pages/recommendations', {tracks: searchResults})
+      res.render('pages/recommendations', {
+        tracks: searchResults,
+        username: req.session.user.username,
+        first_name: req.session.user.first_name,
+        last_name: req.session.user.last_name,
+        spotify_loggedin: req.session.user.spotify_loggedin,
+      });
     }
     catch(error){
       console.error(error);
-      res.render('pages/recommendations', {tracks: [],error: 'failed'})
+      res.render('pages/recommendations', {
+        tracks: [],
+        error: 'failed'
+      });
     }
   });
 
@@ -590,7 +599,13 @@ app.post('/displayResults', async (req, res) => {
     try{
        const response = await axios({url: url})
        const searchResults = response.data.similartracks.track   
-       res.render('pages/recResults', {tracks: searchResults})
+      res.render('pages/recResults', {
+        tracks: searchResults,
+        username: req.session.user.username,
+        first_name: req.session.user.first_name,
+        last_name: req.session.user.last_name,
+        spotify_loggedin: req.session.user.spotify_loggedin,
+      });
     }
     catch(error){
       console.error(error);
