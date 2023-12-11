@@ -2,8 +2,11 @@
 <% if(typeof username === "undefined") { %>
     <%- include ('../partials/menu2') %>
 <% } %>
-<% if(typeof username !== "undefined") { %>
+<% if(typeof username !== "undefined" && spotify_loggedin) { %>
     <%- include ('../partials/menu1') %>
+<% } %>
+<% if(typeof username !== "undefined" && !spotify_loggedin) { %>
+    <%- include ('../partials/menu3') %>
 <% } %>
 
 

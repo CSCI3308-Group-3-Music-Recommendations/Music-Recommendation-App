@@ -71,7 +71,13 @@ app.get('/', (req, res) => {
 });
 
 app.get('/discover', (req, res) => {
-  res.render('pages/discover', {events: []});
+  res.render('pages/discover', {
+    events: [],
+    username: req.session.user.username,
+    first_name: req.session.user.first_name,
+    last_name: req.session.user.last_name,
+    spotify_loggedin: req.session.user.spotify_loggedin,
+  });
 });
 
 app.get('/home', (req, res) => {

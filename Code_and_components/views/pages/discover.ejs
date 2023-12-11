@@ -1,5 +1,10 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/menu1') %>
+<% if(spotify_loggedin) { %>
+    <%- include ('../partials/menu1') %>
+<% } %>
+<% if(!spotify_loggedin) { %>
+    <%- include ('../partials/menu3') %>
+<% } %>
 
 <mainTwo>
     <div class="container mt-5">
